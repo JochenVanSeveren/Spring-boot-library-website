@@ -1,12 +1,43 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Boeken catalogus</title>
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Boeken Catalog</title>
+    <link th:href="@{css/global.css}" href="../static/css/global.css"
+          rel="stylesheet" type="text/css" media="screen"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
-<h1>Book Catalog</h1>
-<!-- Add your Thymeleaf code here for listing books, navigation, etc. -->
+<div class="container">
+    <h1>Book Catalog</h1>
+
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Author(s)</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="book : ${books}">
+            <td th:text="${book.title}"></td>
+            <td>
+                        <span th:each="author, iterStat : ${book.authors}"
+                              th:text="${author.name + (iterStat.last ? '' : ', ')}">
+                        </span>
+            </td>
+            <td>
+                <a th:href="@{'/bookDetails/' + ${book.isbn}}" class="btn btn-primary">View Details</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <a href="#" class="btn btn-info">Most Popular Books</a>
+    <a th:if="${user.role == 'admin'}" href="/addBook" class="btn btn-success">Add Book</a>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 </body>
 </html>
