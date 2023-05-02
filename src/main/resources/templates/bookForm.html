@@ -79,14 +79,23 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
+
+  let authorCount = 1;
+  const AUTHOR_MAX = 3;
+
   $(document).ready(function () {
     $('#add-author').on('click', function () {
+      authorCount++;
       const authorInput = `<div class="form-group author-group">
-        <label>Author:</label>
-        <input type="text" class="form-control author-input" placeholder="Author name">
-        <button type="button" class="btn btn-danger btn-sm mt-2 remove-author mb-2">Remove Author</button>
-      </div>`;
+      <label>Author:</label>
+      <input type="text" class="form-control author-input" placeholder="Author name">
+      <button type="button" class="btn btn-danger btn-sm mt-2 remove-author mb-2">Remove Author</button>
+    </div>`;
       $('#authors-container').append(authorInput);
+
+      if (authorCount >= AUTHOR_MAX) {
+        $(this).prop('disabled', true);
+      }
     });
 
     $('#add-location').on('click', function () {
@@ -110,6 +119,8 @@
 
     // Remove author event
     $(document).on('click', '.remove-author', function () {
+        authorCount--;
+        $('#add-author').prop('disabled', false);
       $(this).closest('.author-group').remove();
     });
 
