@@ -10,7 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-//import model.validation.ISBN;
+import model.validation.ISBN;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class Book {
     @Size(min = 1, max = MAX_AUTHORS, message = "There must be between 1 and 3 authors")
     private List<Author> authors;
 
-//    @ISBN
+    @ISBN
     private String isbn;
 
     @Min(value = 1, message = "Price must be greater than 0")
