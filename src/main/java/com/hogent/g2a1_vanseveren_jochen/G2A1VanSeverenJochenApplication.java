@@ -5,7 +5,11 @@ import domain.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+
+import java.util.Locale;
 
 @SpringBootApplication
 public class G2A1VanSeverenJochenApplication implements WebMvcConfigurer {
@@ -15,7 +19,7 @@ public class G2A1VanSeverenJochenApplication implements WebMvcConfigurer {
     }
 
     @Bean
-    BookService boekService() {
+    BookService bookService() {
         return new BookServiceImpl();
     }
 
@@ -24,10 +28,17 @@ public class G2A1VanSeverenJochenApplication implements WebMvcConfigurer {
         return new UserServiceImpl();
     }
 
-    @Bean
-    public FavoritesService favoritesService() {
-        return new FavoritesServiceImpl();
-    }
+//    @Bean
+//    public FavoritesService favoritesService() {
+//        return new FavoritesServiceImpl();
+//    }
+
+//    @Bean
+//    LocaleResolver localeResolver() {
+//        SessionLocaleResolver slr = new SessionLocaleResolver();
+//        slr.setDefaultLocale(Locale.ENGLISH);
+//        return slr;
+//    }
 
 //    @Override
 //    public void addViewControllers(ViewControllerRegistry registry) {

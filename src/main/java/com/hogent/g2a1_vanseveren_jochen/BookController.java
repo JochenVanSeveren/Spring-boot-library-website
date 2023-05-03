@@ -1,6 +1,7 @@
 package com.hogent.g2a1_vanseveren_jochen;
 
 import domain.BookService;
+import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import model.Book;
 import model.User;
@@ -20,7 +21,7 @@ import java.util.List;
 public class BookController {
 
     @Autowired
-    private BookService bookService;
+    public BookService bookService;
 
     @GetMapping("/")
     public String showBookCatalog(Model model) {
@@ -61,7 +62,7 @@ public class BookController {
     }
 
     @PostMapping("/addBook")
-    public String submitAddBook(@ModelAttribute("book") Book book, BindingResult result) {
+    public String submitAddBook(@Valid @ModelAttribute("book") Book book, BindingResult result) {
         if (result.hasErrors()) {
             return "bookForm";
         }

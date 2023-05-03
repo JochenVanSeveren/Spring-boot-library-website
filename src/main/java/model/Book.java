@@ -1,10 +1,16 @@
 package model;
 
 import jakarta.persistence.ManyToMany;
+import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+//import model.validation.ISBN;
 
 import java.util.List;
 
@@ -12,20 +18,24 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-// @Data
 public class Book {
 
+    @NotBlank(message = "Title cannot be empty")
     private String title;
+
+    @Size(min = 1, max = MAX_AUTHORS, message = "There must be between 1 and 3 authors")
     private List<Author> authors;
+
+//    @ISBN
     private String isbn;
+
+    @Min(value = 1, message = "Price must be greater than 0")
+    @Max(value = 100, message = "Price must be less than 100")
     private double price;
-    private int starts;
+
+    private int stars;
+
     private List<Location> locations;
 
-//    @ManyToMany(mappedBy = "favorites")
-//    private List<User> favoritedByUsers;
-
     public static final int MAX_AUTHORS = 3;
-
-
 }

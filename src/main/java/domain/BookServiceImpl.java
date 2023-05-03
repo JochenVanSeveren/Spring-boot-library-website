@@ -1,11 +1,13 @@
 package domain;
 
+import lombok.NoArgsConstructor;
 import model.Author;
 import model.Book;
 import model.Location;
 
 import java.util.Arrays;
 import java.util.List;
+
 
 public class BookServiceImpl implements BookService {
 
@@ -24,7 +26,7 @@ public class BookServiceImpl implements BookService {
         Location location3 = new Location(34567, 89012, "Chicago", null);
         Location location4 = new Location(45678, 90123, "San Francisco", null);
 
-        Book book1 = new Book("1984", List.of(author1), "978-0-452-28423-4", 19.99, 4, List.of(location1, location2));
+        Book book1 = new Book("1984", List.of(author1, author2), "978-0-452-28423-4", 19.99, 4, List.of(location1, location2));
         Book book2 = new Book("To Kill a Mockingbird", List.of(author2), "978-0-06-093546-7", 24.99, 5, List.of(location2));
         Book book3 = new Book("The Catcher in the Rye", List.of(author3), "978-0-316-76948-1", 29.99, 3, List.of(location3));
         Book book4 = new Book("The Great Gatsby", List.of(author4), "978-0-7432-7356-5", 34.99, 4, List.of(location4));
@@ -39,7 +41,7 @@ public class BookServiceImpl implements BookService {
 
 
         author1.setBooks(List.of(book1, book8, book11));
-        author2.setBooks(List.of(book2, book8, book12));
+        author2.setBooks(List.of(book2, book8, book12, book1));
         author3.setBooks(List.of(book3, book9, book12));
         author4.setBooks(List.of(book4, book9));
         author5.setBooks(List.of(book5, book10));
@@ -63,5 +65,4 @@ public class BookServiceImpl implements BookService {
     public void save(Book book) {
 
     }
-
 }

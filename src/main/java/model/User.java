@@ -1,6 +1,10 @@
 package model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +24,16 @@ public class User implements Serializable {
     private Long id;
     private String role;
     private boolean isFavoriteLimitReached;
+
+    @Pattern(regexp = "^[a-zA-Z0-9]{3,}$", message = "Username must be at least 3 characters long and contain only letters and numbers")
+    private String username;
+
+    @Size(min = 8, message = "Password must be at least 8 characters long")
+    private String password;
+
+    @NotBlank(message = "Email is required")
+    @Email(message = "Invalid email address")
+    private String email;
 
     @ManyToMany
     @JoinTable(

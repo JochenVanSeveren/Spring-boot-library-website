@@ -4,22 +4,25 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Book Details</title>
-  <link th:href="@{css/global.css}" href="../static/css/global.css"
-        rel="stylesheet" type="text/css" media="screen"/>
+  <link rel="stylesheet" th:href="@{css/global.css}" />
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <link rel="icon" href="/favicon.png" type="image/ico">
 </head>
 <body>
-<div class="container">
+<div class="container mt-4">
   <h1>Book Details</h1>
 
   <div class="card">
     <div class="card-body">
       <h4 class="card-title" th:text="${book.title}"></h4>
-      <h6 class="card-subtitle mb-2 text-muted" th:text="${book.authors.![name]}"></h6>
+      <ul class="list-unstyled">
+        <li th:each="author : ${book.authors}" th:text="${author.name}"></li>
+      </ul>
+
       <p class="card-text">
         <strong>ISBN:</strong> <span th:text="${book.isbn}"></span><br>
         <strong>Price:</strong> <span th:text="${#numbers.formatDecimal(book.price, 1, 2)}"></span> €<br>
-        <strong>Stars:</strong> <span th:text="${book.starts}"></span><br>
+        <strong>Stars:</strong> <span th:text="${book.stars}"></span><br>
         <strong>Locations:</strong>
       <ul>
         <li th:each="location : ${book.locations}">
