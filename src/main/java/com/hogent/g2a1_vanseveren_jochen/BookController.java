@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -73,7 +74,13 @@ public class BookController {
             @ModelAttribute("book") Book book, BindingResult result, Model model,
             @RequestParam("authorNames") String[] authorNames) {
 
+
+        if (authorNames.length > Book.MAX_AUTHORS || authorNames.length < 1) {
+            result.rejectValue("authors", "Size.book.authors", "There must be between 1 and 3 authors");
+        }
+
         if (result.hasErrors()) {
+
             log.error("Errors in form");
             log.error(result.toString());
             List<Author> globalAuthors = authorService.findAll();
@@ -81,7 +88,17 @@ public class BookController {
             return "bookForm";
         }
 
-        List<Author> authors = authorService.findByNameIn(authorNames);
+        List<Author> authors = new ArrayList<>();
+        for (String authorName : authorNames) {
+            Author author = authorService.findByName(authorName);
+            if (author == null) {
+                author = new Author();
+                author.setName(authorName);
+                authorService.save(author);
+            }
+            authors.add(author);
+        }
+
 
         book.setAuthors(authors);
 

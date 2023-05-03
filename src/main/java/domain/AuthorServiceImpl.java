@@ -47,15 +47,9 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public List<Author> findByNameIn(String[] authorNames) {
-        return authors.stream().filter(author -> {
-            for (String authorName : authorNames) {
-                if (author.getName().equals(authorName)) {
-                    return true;
-                }
-            }
-            return false;
-        }).toList();
+    public Author findByName(String authorName) {
+        return authors.stream().filter(author -> author.getName().equals(authorName)).findFirst().orElse(null);
     }
+
 
 }

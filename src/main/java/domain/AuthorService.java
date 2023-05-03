@@ -12,5 +12,7 @@ public interface AuthorService {
 
     Author findById(long l);
 
-    List<Author> findByNameIn(String[] authorNames);
+
+
+    Author findByName(String authorName);
 }
