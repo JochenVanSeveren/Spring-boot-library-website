@@ -16,10 +16,10 @@ public class LocationServiceImpl implements LocationService {
     }
 
     private void initLocations() {
-        locations.add(new Location(12345, 67890, "New York", null));
-        locations.add(new Location(23456, 78901, "Los Angeles", null));
-        locations.add(new Location(34567, 89012, "Chicago", null));
-        locations.add(new Location(45678, 90123, "San Francisco", null));
+        locations.add(new Location(50, 100, "A", null));
+        locations.add(new Location(200, 300, "B", null));
+        locations.add(new Location(50, 250, "C", null));
+        locations.add(new Location(200, 280, "D", null));
     }
 
     @Override

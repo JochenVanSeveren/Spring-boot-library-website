@@ -26,10 +26,10 @@ public class BookServiceImpl implements BookService {
         Author author6 = new Author(6L, "J.R.R. Tolkien", null);
         Author author7 = new Author(7L, "Jane Austen", null);
 
-        Location location1 = new Location(12345, 67890, "New York", null);
-        Location location2 = new Location(23456, 78901, "Los Angeles", null);
-        Location location3 = new Location(34567, 89012, "Chicago", null);
-        Location location4 = new Location(45678, 90123, "San Francisco", null);
+        Location location1 = new Location(50, 100, "A", null);
+        Location location2 = new Location(200, 300, "B", null);
+        Location location3 = new Location(50, 250, "C", null);
+        Location location4 = new Location(200, 280, "D", null);
 
         Book book1 = new Book("1984", List.of(author1, author2), "978-0-452-28423-4", 19.99, 4, List.of(location1, location2));
         Book book2 = new Book("To Kill a Mockingbird", List.of(author2), "978-0-06-093546-7", 24.99, 5, List.of(location2));

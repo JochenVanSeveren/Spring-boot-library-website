@@ -2,6 +2,7 @@ package com.hogent.g2a1_vanseveren_jochen;
 
 import domain.AuthorService;
 import domain.BookService;
+import domain.LocationService;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import model.Author;
@@ -27,6 +28,8 @@ public class BookController {
     @Autowired
     public AuthorService authorService;
 
+    @Autowired
+    public LocationService locationService;
 
     @GetMapping("/")
     public String showBookCatalog(Model model) {

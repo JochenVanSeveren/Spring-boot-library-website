@@ -29,6 +29,11 @@ public class G2A1VanSeverenJochenApplication implements WebMvcConfigurer {
     }
 
     @Bean
+    LocationService locationService() {
+        return new LocationServiceImpl();
+    }
+
+    @Bean
     public UserService userService() {
         return new UserServiceImpl();
     }
