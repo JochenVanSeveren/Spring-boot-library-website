@@ -1,136 +1,132 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Add Book</title>
-  <link rel="stylesheet" th:href="@{css/global.css}" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-  <link rel="icon" href="/favicon.png" type="image/ico">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Book</title>
+    <link rel="stylesheet" th:href="@{css/global.css}"/>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="icon" href="/favicon.png" type="image/ico">
 
-  <style>
-    .error {
-      color: red;
-    }
-  </style>
+    <style>
+        .error {
+            color: red;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
-  <h1>Add Book</h1>
-  <form th:action="@{/addBook}" th:object="${book}" method="post">
-    <div class="form-group">
-      <label for="title">Name:</label>
-      <input type="text" class="form-control" id="title" th:field="*{title}" required>
-      <p class="error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
-    </div>
-
-    <!-- Add ISBN input field -->
-    <div class="form-group">
-      <label for="isbn">ISBN number:</label>
-      <input type="text" class="form-control" id="isbn" th:field="*{isbn}" pattern="\d{3}-\d{1,5}-\d{1,7}-\d{1,6}-\d{1}" required>
-      <p class="error" th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}"></p>
-    </div>
-    <!-- Add price input field -->
-    <div class="form-group">
-      <label for="price">Purchase price:</label>
-      <input type="number" class="form-control" id="price" th:field="*{price}" min="0.01" max="100" step="0.01">
-      <p class="error" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></p>
-    </div>
-
-    <div id="authors-container">
-      <div class="form-group author-group">
-        <label>Author:</label>
-        <input type="text" class="form-control author-input" placeholder="Author name">
-        <button type="button" class="btn btn-danger btn-sm mt-2 remove-author mb-2">Remove Author</button>
-      </div>
-    </div>
-    <button type="button" id="add-author" class="btn btn-secondary">Add Author</button>
-
-    <div id="locations-container">
-      <!-- Starting location input field -->
-      <div class="location-group">
+    <h1>Add Book</h1>
+    <form th:action="@{/addBook}" th:object="${book}" method="post">
         <div class="form-group">
-          <label>Location - Plaatscode1:</label>
-          <input type="number" class="form-control" min="50" max="300" placeholder="Plaatscode1">
+            <label for="title">Title:</label>
+            <input type="text" class="form-control" id="title" th:field="*{title}" required>
+            <p class="error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
+        </div>
+
+        <div class="form-group">
+            <label for="isbn">ISBN number:</label>
+            <input type="text" class="form-control" id="isbn" th:field="*{isbn}"
+                   pattern="\d{3}-\d{1,5}-\d{1,7}-\d{1,6}-\d{1}" required>
+            <p class="error" th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}"></p>
         </div>
         <div class="form-group">
-          <label>Location - Plaatscode2:</label>
-          <input type="number" class="form-control" min="50" max="300" placeholder="Plaatscode2">
+            <label for="price">Purchase price:</label>
+            <input type="number" class="form-control" id="price" th:field="*{price}" min="0.01" max="100" step="0.01">
+            <p class="error" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></p>
         </div>
+
         <div class="form-group">
-          <label>Location - Plaatsnaam:</label>
-          <input type="text" class="form-control" pattern="[a-zA-Z]+" placeholder="Plaatsnaam">
+            <label for="authors">Authors:</label>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" id="author-search" placeholder="Search author by name">
+                <div class="input-group-append">
+                    <button class="btn btn-outline-secondary" type="button">Search</button>
+                </div>
+            </div>
+
+            <select multiple required class="form-control" style="height: 15rem;" id="authors" name="authorNames">
+                <option th:each="author : ${globalAuthors}" th:value="${author.name}" th:text="${author.name}"></option>
+            </select>
+
+
+
+            <span th:if="${#fields.hasErrors('authors')}" th:errors="*{authors}" class="error"></span>
+
+
+
+            <div style="display: flex; justify-content: space-between;" class="mt-4">
+                <label for="new-author"></label><input type="text" class="form-control" id="new-author" placeholder="Add new author to the list">
+                <button type="button" id="add-author-btn" class="btn btn-primary">Add</button>
+            </div>
+
         </div>
-        <button type="button" class="btn btn-danger btn-sm remove-location mb-2">Remove Location</button>
-      </div>
-    </div>
-    <div style="display: flex; justify-content: space-between;">
-      <button type="button" id="add-location" class="btn btn-secondary mb-2">Add Location</button>
-      <div>
-        <a href="/" class="btn btn-danger mb-2">Cancel</a>
-        <button type="submit" class="btn btn-primary mb-2">Add Book</button>
-      </div>
-    </div>
 
 
+        <div style="display: flex; justify-content: space-between;">
+            <!--            <button type="button" id="add-location" class="btn btn-secondary mb-2">Add Location</button>-->
+            <div>
+                <a href="/" class="btn btn-danger mb-2">Cancel</a>
+                <button type="submit" class="btn btn-primary mb-2">Add Book</button>
+            </div>
+        </div>
 
-  </form>
+
+    </form>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 <script>
+    $(document).ready(function () {
+        $('#author-search').on('input', function () {
+            var searchValue = $(this).val().toLowerCase();
+            $('#authors option').each(function () {
+                if ($(this).text().toLowerCase().indexOf(searchValue) === -1) {
+                    $(this).attr('hidden', 'hidden');
+                } else {
+                    $(this).removeAttr('hidden');
+                }
+            });
+        });
 
-  let authorCount = 1;
-  const AUTHOR_MAX = 3;
+        // Add this code to handle click events on options
+        $('#authors').on('mousedown', function (e) {
+            e.preventDefault();
+            var option = e.target;
+            if (option.tagName === 'OPTION') {
+                option.selected = !option.selected;
+                return false;
+            }
+        });
 
-  $(document).ready(function () {
-    $('#add-author').on('click', function () {
-      authorCount++;
-      const authorInput = `<div class="form-group author-group">
-      <label>Author:</label>
-      <input type="text" class="form-control author-input" placeholder="Author name">
-      <button type="button" class="btn btn-danger btn-sm mt-2 remove-author mb-2">Remove Author</button>
-    </div>`;
-      $('#authors-container').append(authorInput);
 
-      if (authorCount >= AUTHOR_MAX) {
-        $(this).prop('disabled', true);
-      }
+
     });
 
-    $('#add-location').on('click', function () {
-      const locationInput = `<div class="location-group">
-        <div class="form-group">
-          <label>Location - Plaatscode1:</label>
-          <input type="number" class="form-control" min="50" max="300" placeholder="Plaatscode1">
-        </div>
-        <div class="form-group">
-          <label>Location - Plaatscode2:</label>
-          <input type="number" class="form-control" min="50" max="300" placeholder="Plaatscode2">
-        </div>
-        <div class="form-group">
-          <label>Location - Plaatsnaam:</label>
-          <input type="text" class="form-control" pattern="[a-zA-Z]+" placeholder="Plaatsnaam">
-        </div>
-        <button type="button" class="btn btn-danger btn-sm remove-location mb-2">Remove Location</button>
-      </div>`;
-      $('#locations-container').append(locationInput);
+    $(document).add(function () {
+        $('#add-author-btn').click(function () {
+            var newAuthorName = $('#new-author').val();
+            if (newAuthorName) {
+                var newOption = $('<option>', {
+                    value: newAuthorName,
+                    text: newAuthorName,
+                    selected: true
+                });
+                $('#authors').append(newOption);
+                $('#new-author').val('');
+            }
+        });
     });
 
-    // Remove author event
-    $(document).on('click', '.remove-author', function () {
-        authorCount--;
-        $('#add-author').prop('disabled', false);
-      $(this).closest('.author-group').remove();
-    });
 
-    // Remove location event
-    $(document).on('click', '.remove-location', function () {
-      $(this).closest('.location-group').remove();
-    });
-  });
 </script>
+
+
+
+
+
 
 </body>
 </html>

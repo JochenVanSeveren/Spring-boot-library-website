@@ -1,25 +1,30 @@
 package domain;
 
-import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import model.Author;
 import model.Book;
 import model.Location;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
-
+@Slf4j
 public class BookServiceImpl implements BookService {
 
-    @Override
-    public List<Book> findAll() {
-        Author author1 = new Author("George Orwell", null);
-        Author author2 = new Author("Harper Lee", null);
-        Author author3 = new Author("J.D. Salinger", null);
-        Author author4 = new Author("F. Scott Fitzgerald", null);
-        Author author5 = new Author("J.K. Rowling", null);
-        Author author6 = new Author("J.R.R. Tolkien", null);
-        Author author7 = new Author("Jane Austen", null);
+    private List<Book> books;
+
+    public BookServiceImpl() {
+        loadInitBooks();
+    }
+
+    public void loadInitBooks() {
+        Author author1 = new Author(1L, "George Orwell", null);
+        Author author2 = new Author(2L, "Harper Lee", null);
+        Author author3 = new Author(3L, "J.D. Salinger", null);
+        Author author4 = new Author(4L, "F. Scott Fitzgerald", null);
+        Author author5 = new Author(5L, "J.K. Rowling", null);
+        Author author6 = new Author(6L, "J.R.R. Tolkien", null);
+        Author author7 = new Author(7L, "Jane Austen", null);
 
         Location location1 = new Location(12345, 67890, "New York", null);
         Location location2 = new Location(23456, 78901, "Los Angeles", null);
@@ -53,7 +58,12 @@ public class BookServiceImpl implements BookService {
         location3.setBook(book3);
         location4.setBook(book4);
 
-        return List.of(book1, book2, book3, book4, book5, book6, book7, book8, book9, book10, book11, book12);
+        this.books = new ArrayList<>(List.of(book1, book2, book3, book4, book5, book6, book7, book8, book9, book10, book11, book12));
+    }
+
+    @Override
+    public List<Book> findAll() {
+        return books;
     }
 
     @Override
@@ -63,6 +73,7 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public void save(Book book) {
-
+        log.info("Saving book: " + book);
+        books.add(book);
     }
 }

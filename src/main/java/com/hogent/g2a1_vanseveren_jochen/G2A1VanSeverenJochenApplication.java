@@ -24,6 +24,11 @@ public class G2A1VanSeverenJochenApplication implements WebMvcConfigurer {
     }
 
     @Bean
+    AuthorService authorService() {
+        return new AuthorServiceImpl();
+    }
+
+    @Bean
     public UserService userService() {
         return new UserServiceImpl();
     }
@@ -33,12 +38,12 @@ public class G2A1VanSeverenJochenApplication implements WebMvcConfigurer {
 //        return new FavoritesServiceImpl();
 //    }
 
-//    @Bean
-//    LocaleResolver localeResolver() {
-//        SessionLocaleResolver slr = new SessionLocaleResolver();
-//        slr.setDefaultLocale(Locale.ENGLISH);
-//        return slr;
-//    }
+//        @Bean
+//        public LocaleResolver localeResolver() {
+//            SessionLocaleResolver slr = new SessionLocaleResolver();
+//            slr.setDefaultLocale(new Locale("nl", "BE"));
+//            return slr;
+//        }
 
 //    @Override
 //    public void addViewControllers(ViewControllerRegistry registry) {

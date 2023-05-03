@@ -17,4 +17,13 @@ public class Location {
 
     private Book book;
 
+    @Override
+    public String toString() {
+        return "Location{" +
+                "plaatscode1=" + plaatscode1 +
+                ", plaatscode2=" + plaatscode2 +
+                ", plaatsnaam='" + plaatsnaam + '\'' +
+//                ", book=" + book.getTitle() +
+                '}';
+    }
 }

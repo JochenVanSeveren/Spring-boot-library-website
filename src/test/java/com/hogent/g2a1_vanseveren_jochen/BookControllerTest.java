@@ -36,8 +36,8 @@ public class BookControllerTest {
 
     @BeforeEach
     public void setUp() {
-        Author author1 = new Author("George Orwell", null);
-        Author author2 = new Author("Harper Lee", null);
+        Author author1 = new Author(1L,"George Orwell", null);
+        Author author2 = new Author(2L,"Harper Lee", null);
 
         Book book1 = new Book("1984", List.of(author1), "978-0-452-28423-4", 19.99, 4, null);
         Book book2 = new Book("To Kill a Mockingbird", List.of(author2), "978-0-06-093546-7", 24.99, 5, null);

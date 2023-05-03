@@ -1,11 +1,9 @@
 package model;
 
-import jakarta.persistence.ManyToMany;
-import jakarta.validation.constraints.Size;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,6 +11,7 @@ import lombok.Setter;
 import model.validation.ISBN;
 
 import java.util.List;
+
 
 @Getter
 @Setter
@@ -38,4 +37,17 @@ public class Book {
     private List<Location> locations;
 
     public static final int MAX_AUTHORS = 3;
+
+
+    @Override
+    public String toString() {
+        return "Book{" +
+                "title='" + title + '\'' +
+                ", authors=" + authors +
+                ", isbn='" + isbn + '\'' +
+                ", price=" + price +
+                ", stars=" + stars +
+                ", locations=" + locations +
+                '}';
+    }
 }
