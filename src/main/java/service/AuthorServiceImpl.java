@@ -1,12 +1,12 @@
-package domain;
+package service;
 
-import model.Author;
+import domain.Author;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 public class AuthorServiceImpl implements AuthorService {
-    private List<Author> authors;
+    private Set<Author> authors = new HashSet<>();
 
     public AuthorServiceImpl() {
         loadInitAuthors();
@@ -21,7 +21,7 @@ public class AuthorServiceImpl implements AuthorService {
         Author author6 = new Author(6L, "J.R.R. Tolkien", null);
         Author author7 = new Author(7L, "Jane Austen", null);
 
-        authors = new ArrayList<>();
+        authors = new HashSet<>();
         authors.add(author1);
         authors.add(author2);
         authors.add(author3);
@@ -32,7 +32,7 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     @Override
-    public List<Author> findAll() {
+    public Set<Author> findAll() {
         return authors;
     }
 
@@ -41,10 +41,10 @@ public class AuthorServiceImpl implements AuthorService {
         authors.add(author);
     }
 
-    @Override
-    public Author findById(long l) {
-        return authors.stream().filter(author -> author.getId() == l).findFirst().orElse(null);
-    }
+//    @Override
+//    public Author findById(long l) {
+//        return authors.stream().filter(author -> author.getId() == l).findFirst().orElse(null);
+//    }
 
     @Override
     public Author findByName(String authorName) {

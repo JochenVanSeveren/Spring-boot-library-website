@@ -1,4 +1,4 @@
-package model;
+package domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
@@ -11,7 +11,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -40,7 +41,7 @@ public class User implements Serializable {
             name = "user_favorite_books",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "book_id"))
-    private List<Book> favorites;
+    private Set<Book> favorites = new HashSet<>();
 
     public User(String role, boolean b) {
         this.role = role;

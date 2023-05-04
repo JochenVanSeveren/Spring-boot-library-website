@@ -1,14 +1,14 @@
 //package com.hogent.g2a1_vanseveren_jochen;
 //
-//import domain.BookService;
-//import domain.FavoritesService;
-//import model.Book;
-//import model.User;
+//import service.BookService;
+//import service.FavoritesService;
+//import domain.Book;
+//import domain.User;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.stereotype.Controller;
 //import org.springframework.web.bind.annotation.PathVariable;
 //import org.springframework.web.bind.annotation.PostMapping;
-//import domain.UserService;
+//import service.UserService;
 //
 //@Controller
 //public class FavoritesController {

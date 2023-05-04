@@ -1,12 +1,13 @@
-package domain;
+package service;
 
-import model.Location;
+import domain.Location;
 
 import java.util.List;
+import java.util.Set;
 
 public interface LocationService
 {
-    List<Location> findAll();
+    Set<Location> findAll();
 
     void save(Location location);
 

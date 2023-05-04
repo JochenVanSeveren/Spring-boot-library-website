@@ -1,16 +1,19 @@
-package model;
+package domain;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.ManyToOne;
 import jakarta.validation.constraints.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.io.Serializable;
 
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor
-public class Location {
+public class Location implements Serializable {
 
     @Min(value = 50, message = "plaatscode1 should be greater than or equal to 50")
     @Max(value = 300, message = "plaatscode1 should be less than or equal to 300")
@@ -23,6 +26,7 @@ public class Location {
     @Pattern(regexp = "^[a-zA-Z]+$", message = "plaatsnaam should only contain letters")
     private String plaatsnaam;
 
+    @ManyToOne
     private Book book;
 
     public Location(int plaatscode1, int plaatscode2, String plaatsnaam, Book book) {

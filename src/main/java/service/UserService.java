@@ -1,6 +1,6 @@
-package domain;
+package service;
 
-import model.User;
+import domain.User;
 
 public interface UserService {
     User getCurrentUser();

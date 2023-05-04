@@ -1,12 +1,13 @@
-package domain;
+package service;
 
-import model.Book;
+import domain.Book;
 
 import java.util.List;
+import java.util.Set;
 
 public interface BookService {
 
-    List<Book> findAll();
+    Set<Book> findAll();
 
     Book findByIsbn(String isbn);
 

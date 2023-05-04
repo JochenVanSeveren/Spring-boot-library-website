@@ -1,4 +1,4 @@
-package model.validation;
+package validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;

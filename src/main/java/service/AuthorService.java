@@ -1,18 +1,17 @@
-package domain;
+package service;
 
-import model.Author;
+import domain.Author;
 
 import java.util.List;
+import java.util.Set;
 
 public interface AuthorService {
 
-    List<Author> findAll();
+    Set<Author> findAll();
 
     void save(Author author);
 
-    Author findById(long l);
-
-
+//    Author findById(long l);
 
     Author findByName(String authorName);
 }

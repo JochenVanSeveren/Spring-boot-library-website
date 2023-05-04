@@ -1,7 +1,7 @@
-package domain;
+package service;
 
-import model.Book;
-import model.User;
+import domain.Book;
+import domain.User;
 
 public interface FavoritesService {
     void toggleFavorite(User user, Book book);

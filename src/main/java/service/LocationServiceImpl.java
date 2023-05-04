@@ -1,15 +1,17 @@
-package domain;
+package service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import lombok.extern.slf4j.Slf4j;
-import model.Location;
+import domain.Location;
 
 @Slf4j
 public class LocationServiceImpl implements LocationService {
 
-    private final List<Location> locations = new ArrayList<>();
+    private final Set<Location> locations = new HashSet<>();
 
     public LocationServiceImpl() {
         initLocations();
@@ -23,7 +25,7 @@ public class LocationServiceImpl implements LocationService {
     }
 
     @Override
-    public List<Location> findAll() {
+    public Set<Location> findAll() {
         return locations;
     }
 

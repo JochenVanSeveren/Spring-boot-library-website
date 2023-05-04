@@ -1,6 +1,6 @@
-package domain;
+package service;
 
-import model.User;
+import domain.User;
 
 public class UserServiceImpl implements UserService {
     @Override
