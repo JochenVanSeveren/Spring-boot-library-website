@@ -4,160 +4,171 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Book</title>
-    <link rel="stylesheet" th:href="@{css/global.css}"/>
-    <link rel="stylesheet" th:href="@{css/bookForm.css}"/>
+    <link rel="stylesheet" th:href="@{/css/global.css}"/>
+    <link rel="stylesheet" th:href="@{/css/bookForm.css}"/>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <link rel="icon" href="/favicon.png" type="image/ico">
-
     <style>
+
+        @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+
         .error {
             color: red;
         }
     </style>
+
 </head>
 <body>
 <div class="container">
     <h1>Add Book</h1>
-    <form th:action="@{/addBook}" th:object="${book}" method="post">
-        <div class="form-group">
-            <label for="title">Title:</label>
-            <input type="text" class="form-control" id="title" th:field="*{title}" required>
-            <p class="error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
-        </div>
-
-        <div class="form-group">
-            <label for="isbn">ISBN number:</label>
-            <input type="text" class="form-control" id="isbn" th:field="*{isbn}"
-                   pattern="\d{3}-\d{1,5}-\d{1,7}-\d{1,6}-\d{1}" required>
-            <p class="error" th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}"></p>
-        </div>
-        <div class="form-group">
-            <label for="price">Purchase price:</label>
-            <input type="number" class="form-control" id="price" th:field="*{price}" min="0.01" max="100" step="0.01">
-            <p class="error" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></p>
-        </div>
-
-        <div class="form-group">
-            <label for="authors">Authors:</label>
-            <div class="input-group mb-3">
-                <input type="text" class="form-control" id="author-search" placeholder="Search author by name">
-                <div class="input-group-append">
-                    <button class="btn btn-outline-secondary" type="button">Search</button>
+    <div class="card">
+        <div class="card-body">
+            <form th:action="@{/addBook}" th:object="${book}" method="post">
+                <div class="form-group">
+                    <label for="title">Title:</label>
+                    <input type="text" class="form-control" id="title" th:field="*{title}" required>
+                    <p class="error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
                 </div>
-            </div>
 
-            <select multiple required class="form-control" style="height: 15rem;" id="authors" name="authorNames">
-                <option th:each="author : ${globalAuthors}" th:value="${author.name}" th:text="${author.name}"></option>
-            </select>
+                <div class="form-group">
+                    <label for="isbn">ISBN number:</label>
+                    <input type="text" class="form-control" id="isbn" th:field="*{isbn}"
+                           pattern="\d{3}-\d{1,5}-\d{1,7}-\d{1,6}-\d{1}" required>
+                    <p class="error" th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}"></p>
+                </div>
+                <div class="form-group">
+                    <label for="price">Purchase price:</label>
+                    <input type="number" class="form-control" id="price" th:field="*{price}" min="0.01" max="100"
+                           step="0.01">
+                    <p class="error" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></p>
+                </div>
+
+                <div class="form-group">
+                    <label for="authors">Authors:</label>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" id="author-search" placeholder="Search author by name">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary" type="button">Search</button>
+                        </div>
+                    </div>
+
+                    <select multiple required class="form-control" style="height: 15rem;" id="authors"
+                            name="authorNames">
+                        <option th:each="author : ${globalAuthors}" th:value="${author.name}"
+                                th:text="${author.name}"></option>
+                    </select>
 
 
-
-            <span th:if="${#fields.hasErrors('authors')}" th:errors="*{authors}" class="error"></span>
-
+                    <span th:if="${#fields.hasErrors('authors')}" th:errors="*{authors}" class="error"></span>
 
 
-            <div style="display: flex; justify-content: space-between;" class="mt-4">
-                <label for="new-author"></label><input type="text" class="form-control" id="new-author" placeholder="Add new author to the list">
-                <button type="button" id="add-author-btn" class="btn btn-primary">Add</button>
-            </div>
+                    <div style="display: flex; justify-content: space-between;" class="mt-4">
+                        <label for="new-author"></label><input type="text" class="form-control" id="new-author"
+                                                               placeholder="Add new author to the list">
+                        <button type="button" id="add-author-btn" class="btn btn-primary">Add</button>
+                    </div>
 
-        </div>
+                </div>
 
-        <!-- Add Location -->
-        <div class="form-group">
-            <label for="location-inputs">Locations:</label>
-            <div class="d-flex">
-                <div id="location-inputs">
-                    <div class="location-input-row d-flex">
-                        <input type="number" class="form-control mr-2" id="plaatscode1" placeholder="Plaatscode1">
-                        <input type="number" class="form-control mr-2" id="plaatscode2" placeholder="Plaatscode2">
-                        <input type="text" class="form-control mr-2" id="plaatsnaam" placeholder="Plaatsnaam">
+                <!-- Add Location -->
+                <div class="form-group">
+                    <label for="location-inputs">Locations:</label>
+                    <div class="d-flex">
+                        <div id="location-inputs">
+                            <div class="location-input-row d-flex">
+                                <input type="number" class="form-control mr-2" id="plaatscode1"
+                                       placeholder="Plaatscode1">
+                                <input type="number" class="form-control mr-2" id="plaatscode2"
+                                       placeholder="Plaatscode2">
+                                <input type="text" class="form-control mr-2" id="plaatsnaam" placeholder="Plaatsnaam">
+                            </div>
+                        </div>
+                        <div id="location-list" class="mt-2"></div>
+                    </div>
+                    <p class="error" id="plaatscode-error"></p>
+                    <p class="error" id="plaatsnaam-error"></p>
+                    <button type="button" id="add-location-btn" class="btn btn-primary mt-2">Add Location</button>
+                    <input type="hidden" name="locationData" id="location-data">
+                    <span th:if="${#fields.hasErrors('locations')}" th:errors="*{locations}" class="error"></span>
+                </div>
+
+
+                <div style="display: flex; justify-content: space-between;">
+                    <!--            <button type="button" id="add-location" class="btn btn-secondary mb-2">Add Location</button>-->
+                    <div>
+                        <a href="/" class="btn btn-danger mb-2">Cancel</a>
+                        <button type="submit" class="btn btn-primary mb-2">Add Book</button>
                     </div>
                 </div>
-                <div id="location-list" class="mt-2"></div>
-            </div>
-            <p class="error" id="plaatscode-error"></p>
-            <p class="error" id="plaatsnaam-error"></p>
-            <button type="button" id="add-location-btn" class="btn btn-primary mt-2">Add Location</button>
-            <input type="hidden" name="locationData" id="location-data">
-            <span th:if="${#fields.hasErrors('locations')}" th:errors="*{locations}" class="error"></span>
+
+            </form>
         </div>
-
-
-
-
-
-        <div style="display: flex; justify-content: space-between;">
-            <!--            <button type="button" id="add-location" class="btn btn-secondary mb-2">Add Location</button>-->
-            <div>
-                <a href="/" class="btn btn-danger mb-2">Cancel</a>
-                <button type="submit" class="btn btn-primary mb-2">Add Book</button>
-            </div>
-        </div>
-
-
-    </form>
+    </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
 
-// Add location to the list
-// Add location to the list
-$('#add-location-btn').click(function () {
-    var plaatscode1 = parseInt($('#plaatscode1').val());
-    var plaatscode2 = parseInt($('#plaatscode2').val());
-    var plaatsnaam = $('#plaatsnaam').val();
-    var isValid = true;
+    // Add location to the list
+    // Add location to the list
+    $('#add-location-btn').click(function () {
+        var plaatscode1 = parseInt($('#plaatscode1').val());
+        var plaatscode2 = parseInt($('#plaatscode2').val());
+        var plaatsnaam = $('#plaatsnaam').val();
+        var isValid = true;
 
-    // Validate plaatscode1 and plaatscode2
-    if (!Number.isInteger(plaatscode1) || plaatscode1 < 50 || plaatscode1 > 300 || !Number.isInteger(plaatscode2) || plaatscode2 < 50 || plaatscode2 > 300 || Math.abs(plaatscode2 - plaatscode1) < 50) {
-        isValid = false;
-        $('#plaatscode-error').text('Plaatscode1 and Plaatscode2 must be integers between 50 and 300 (inclusive). The difference between Plaatscode1 and Plaatscode2 must be at least 50.');
-    } else {
-        $('#plaatscode-error').text('');
-    }
+        // Validate plaatscode1 and plaatscode2
+        if (!Number.isInteger(plaatscode1) || plaatscode1 < 50 || plaatscode1 > 300 || !Number.isInteger(plaatscode2) || plaatscode2 < 50 || plaatscode2 > 300 || Math.abs(plaatscode2 - plaatscode1) < 50) {
+            isValid = false;
+            $('#plaatscode-error').text('Plaatscode1 and Plaatscode2 must be integers between 50 and 300 (inclusive). The difference between Plaatscode1 and Plaatscode2 must be at least 50.');
+        } else {
+            $('#plaatscode-error').text('');
+        }
 
-    // Validate plaatsnaam
-    if (!/^[a-zA-Z]+$/.test(plaatsnaam)) {
-        isValid = false;
-        $('#plaatsnaam-error').text('Plaatsnaam must only contain letters.');
-    } else {
-        $('#plaatsnaam-error').text('');
-    }
+        // Validate plaatsnaam
+        if (!/^[a-zA-Z]+$/.test(plaatsnaam)) {
+            isValid = false;
+            $('#plaatsnaam-error').text('Plaatsnaam must only contain letters.');
+        } else {
+            $('#plaatsnaam-error').text('');
+        }
 
-    // If validation passes, add the location
-    if (isValid) {
-        var locationDisplay = $('<div>', { class: 'location-display' }).text(plaatscode1 + '-' + plaatscode2 + ', ' + plaatsnaam);
-        var locationRemoveBtn = $('<button>', { class: 'btn btn-sm btn-danger ml-2', type: 'button' }).text('Remove');
-        locationDisplay.append(locationRemoveBtn);
-        $('#location-list').append(locationDisplay);
+        // If validation passes, add the location
+        if (isValid) {
+            var locationDisplay = $('<div>', {class: 'location-display'}).text(plaatscode1 + '-' + plaatscode2 + ', ' + plaatsnaam);
+            var locationRemoveBtn = $('<button>', {class: 'btn btn-sm btn-danger ml-2', type: 'button'}).text('Remove');
+            locationDisplay.append(locationRemoveBtn);
+            $('#location-list').append(locationDisplay);
 
-        // Clear input fields
-        $('#plaatscode1').val('');
-        $('#plaatscode2').val('');
-        $('#plaatsnaam').val('');
-    }
-});
-
-
-// Remove location from the list
-$(document).on('click', '.location-display button', function() {
-    $(this).parent().remove();
-});
-
-// Before form submission, update the location-data input field
-$('form').on('submit', function() {
-    var locationData = '';
-    $('.location-display').each(function() {
-        locationData += ($(this).text().replace('Remove', '')).trim() + ';';
+            // Clear input fields
+            $('#plaatscode1').val('');
+            $('#plaatscode2').val('');
+            $('#plaatsnaam').val('');
+        }
     });
-    $('#location-data').val(locationData);
-});
+
+
+    // Remove location from the list
+    $(document).on('click', '.location-display button', function () {
+        $(this).parent().remove();
+    });
+
+    // Before form submission, update the location-data input field
+    $('form').on('submit', function () {
+        var locationData = '';
+        $('.location-display').each(function () {
+            locationData += ($(this).text().replace('Remove', '')).trim() + ';';
+        });
+        $('#location-data').val(locationData);
+    });
 </script>
 <script>
-<!--    authors     -->
+    <!--    authors     -->
     $(document).ready(function () {
         $('#author-search').on('input', function () {
             var searchValue = $(this).val().toLowerCase();
@@ -180,7 +191,6 @@ $('form').on('submit', function() {
         });
 
 
-
     });
 
     $(document).add(function () {
@@ -200,10 +210,6 @@ $('form').on('submit', function() {
 
 
 </script>
-
-
-
-
 
 
 </body>

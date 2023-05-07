@@ -42,14 +42,6 @@ public class BookController {
 //        TODO: replace the following line with the code to get the currently logged in user.
         model.addAttribute("user", new User("admin", false));
 
-        boolean isAdmin = false;
-        // Uncomment the following lines and implement the 'userService' to check for admin role.
-        // if (principal != null) {
-        //     Collection<? extends GrantedAuthority> authorities = userService.getAuthorities(principal);
-        //     isAdmin = authorities.stream().anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"));
-        // }
-        model.addAttribute("isAdmin", isAdmin);
-
         return "index";
     }
 
@@ -82,24 +74,15 @@ public class BookController {
             @RequestParam("authorNames") String[] authorNames
             , @RequestParam("locationData") String locationData
     ) {
-
-        log.debug("book: " + book.toString());
-        log.debug("authorNames: " + authorNames);
-
         if (bookService.findByIsbn(book.getIsbn()) != null) {
             result.rejectValue("isbn", "Duplicate.book.isbn", "This ISBN already exists");
         }
-
-
-        log.debug("authorNames: " + Arrays.toString(authorNames) + " length: " + authorNames.length);
         if (authorNames.length > Book.MAX_AUTHORS || authorNames.length < 1) {
             result.rejectValue("authors", "Size.book.authors", "There must be between 1 and 3 authors");
         }
-
         if (locationData == null) {
             result.rejectValue("locations", "Size.book.locations", "There must be at least 1 location");
         }
-
         if (result.hasErrors()) {
 
             log.error("Errors in form");
@@ -118,8 +101,7 @@ public class BookController {
                 author.setName(authorName);
                 author.setBooks(new HashSet<>(List.of(book)));
                 authorService.save(author);
-            }
-            else {
+            } else {
                 author.getBooks().add(book);
                 authorService.save(author);
             }
@@ -132,7 +114,7 @@ public class BookController {
 
         Set<Location> locations = new HashSet<>();
 
-        log.debug( "locationData" + locationData);
+        log.debug("locationData" + locationData);
 
         assert locationData != null;
         String[] items = locationData.split(";");
