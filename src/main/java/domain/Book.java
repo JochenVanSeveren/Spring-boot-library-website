@@ -13,7 +13,9 @@ import validation.ISBN;
 
 import java.io.Serializable;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Entity
@@ -33,7 +35,6 @@ public class Book implements Serializable {
     private String title;
 
     @ManyToMany
-    @Size(min = 1, max = MAX_AUTHORS, message = "There must be between 1 and 3 authors")
     private Set<Author> authors = new HashSet<>();
 
     @ISBN
@@ -62,13 +63,45 @@ public class Book implements Serializable {
 
     @Override
     public String toString() {
+        String authorNames;
+        if (authors.isEmpty()) {
+            authorNames = "No authors";
+        } else {
+            authorNames = authors.stream()
+                    .map(Author::getName)
+                    .collect(Collectors.joining(", "));
+        }
+        String locationNames;
+        if (locations.isEmpty()) {
+            locationNames = "No locations";
+        } else {
+            locationNames = locations.stream()
+                    .map(Location::toString)
+                    .collect(Collectors.joining(", "));
+        }
+
+
         return "Book{" +
                 "title='" + title + '\'' +
-                ", authors=" + authors +
+                ", authors=" + authorNames +
                 ", isbn='" + isbn + '\'' +
                 ", price=" + price +
                 ", stars=" + stars +
-                ", locations=" + locations +
+                ", locations=" + locationNames +
                 '}';
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Book book = (Book) o;
+        return Objects.equals(isbn, book.isbn);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(isbn);
     }
 }

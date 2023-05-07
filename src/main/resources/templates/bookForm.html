@@ -80,7 +80,7 @@
             <p class="error" id="plaatsnaam-error"></p>
             <button type="button" id="add-location-btn" class="btn btn-primary mt-2">Add Location</button>
             <input type="hidden" name="locationData" id="location-data">
-            <span th:if="${#fields.hasErrors('locations')}" th:errors="*{authors}" class="error"></span>
+            <span th:if="${#fields.hasErrors('locations')}" th:errors="*{locations}" class="error"></span>
         </div>
 
 
@@ -112,7 +112,7 @@ $('#add-location-btn').click(function () {
     var isValid = true;
 
     // Validate plaatscode1 and plaatscode2
-    if (!Number.isInteger(plaatscode1) || plaatscode1 < 50 || plaatscode1 > 300 || !Number.isInteger(plaatscode2) || plaatscode2 < 50 || plaatscode2 > 300 || (plaatscode2 - plaatscode1) < 50) {
+    if (!Number.isInteger(plaatscode1) || plaatscode1 < 50 || plaatscode1 > 300 || !Number.isInteger(plaatscode2) || plaatscode2 < 50 || plaatscode2 > 300 || Math.abs(plaatscode2 - plaatscode1) < 50) {
         isValid = false;
         $('#plaatscode-error').text('Plaatscode1 and Plaatscode2 must be integers between 50 and 300 (inclusive). The difference between Plaatscode1 and Plaatscode2 must be at least 50.');
     } else {

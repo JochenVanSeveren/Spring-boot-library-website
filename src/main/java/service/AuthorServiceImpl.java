@@ -13,13 +13,13 @@ public class AuthorServiceImpl implements AuthorService {
     }
 
     private void loadInitAuthors() {
-        Author author1 = new Author(1L, "George Orwell", null);
-        Author author2 = new Author(2L, "Harper Lee", null);
-        Author author3 = new Author(3L, "J.D. Salinger", null);
-        Author author4 = new Author(4L, "F. Scott Fitzgerald", null);
-        Author author5 = new Author(5L, "J.K. Rowling", null);
-        Author author6 = new Author(6L, "J.R.R. Tolkien", null);
-        Author author7 = new Author(7L, "Jane Austen", null);
+        Author author1 = new Author(1L, "George Orwell", new HashSet<>());
+        Author author2 = new Author(2L, "Harper Lee", new HashSet<>());
+        Author author3 = new Author(3L, "J.D. Salinger", new HashSet<>());
+        Author author4 = new Author(4L, "F. Scott Fitzgerald", new HashSet<>());
+        Author author5 = new Author(5L, "J.K. Rowling", new HashSet<>());
+        Author author6 = new Author(6L, "J.R.R. Tolkien", new HashSet<>());
+        Author author7 = new Author(7L, "Jane Austen", new HashSet<>());
 
         authors = new HashSet<>();
         authors.add(author1);

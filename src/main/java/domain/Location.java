@@ -2,12 +2,15 @@ package domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.Pattern;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @Entity
 @Getter
@@ -62,11 +65,30 @@ public class Location implements Serializable {
 
     @Override
     public String toString() {
+        if (book == null) return "Location{" +
+                "plaatscode1=" + plaatscode1 +
+                ", plaatscode2=" + plaatscode2 +
+                ", plaatsnaam='" + plaatsnaam + '\'' +
+                ", book=null" +
+                '}';
         return "Location{" +
                 "plaatscode1=" + plaatscode1 +
                 ", plaatscode2=" + plaatscode2 +
                 ", plaatsnaam='" + plaatsnaam + '\'' +
-                ", book=" + book +
+                ", book=" + book.getTitle() +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Location location = (Location) o;
+        return plaatscode1 == location.plaatscode1 && plaatscode2 == location.plaatscode2 && Objects.equals(plaatsnaam, location.plaatsnaam);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(plaatscode1, plaatscode2, plaatsnaam);
     }
 }

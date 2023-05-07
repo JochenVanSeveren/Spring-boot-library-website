@@ -1,24 +1,24 @@
 package com.hogent.g2a1_vanseveren_jochen;
 
-import service.AuthorService;
-import service.BookService;
-import service.LocationService;
-import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
 import domain.Author;
 import domain.Book;
 import domain.Location;
 import domain.User;
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import service.AuthorService;
+import service.BookService;
+import service.LocationService;
 
+import java.util.Arrays;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-
-import static java.lang.Integer.parseInt;
 
 
 @Controller
@@ -79,16 +79,24 @@ public class BookController {
     public String submitAddBook(
             @Valid
             @ModelAttribute("book") Book book, BindingResult result, Model model,
-            @RequestParam("authorNames") String[] authorNames,
-            @RequestParam("locationData") String locationData
+            @RequestParam("authorNames") String[] authorNames
+            , @RequestParam("locationData") String locationData
     ) {
 
+        log.debug("book: " + book.toString());
+        log.debug("authorNames: " + authorNames);
 
+        if (bookService.findByIsbn(book.getIsbn()) != null) {
+            result.rejectValue("isbn", "Duplicate.book.isbn", "This ISBN already exists");
+        }
+
+
+        log.debug("authorNames: " + Arrays.toString(authorNames) + " length: " + authorNames.length);
         if (authorNames.length > Book.MAX_AUTHORS || authorNames.length < 1) {
             result.rejectValue("authors", "Size.book.authors", "There must be between 1 and 3 authors");
         }
 
-        if (locationData == null ) {
+        if (locationData == null) {
             result.rejectValue("locations", "Size.book.locations", "There must be at least 1 location");
         }
 
@@ -108,6 +116,11 @@ public class BookController {
             if (author == null) {
                 author = new Author();
                 author.setName(authorName);
+                author.setBooks(new HashSet<>(List.of(book)));
+                authorService.save(author);
+            }
+            else {
+                author.getBooks().add(book);
                 authorService.save(author);
             }
             authors.add(author);
@@ -117,9 +130,9 @@ public class BookController {
         book.setAuthors(authors);
 
 
-        log.info(locationData);
-
         Set<Location> locations = new HashSet<>();
+
+        log.debug( "locationData" + locationData);
 
         assert locationData != null;
         String[] items = locationData.split(";");
@@ -130,12 +143,17 @@ public class BookController {
             int index = value1.indexOf("-");
             int x = Integer.parseInt(value1.substring(0, index));
             int y = Integer.parseInt(value1.substring(index + 1));
-            String name = value2.substring(0, value2.length() - 1).trim();
+            String name = value2.trim();
+
+            log.debug(item, x, y, name);
+
             Location location = new Location(x, y, name, book);
             locations.add(location);
         }
 
         book.setLocations(locations);
+
+        locations.forEach(location -> locationService.save(location));
 
         log.info(book.toString());
 
@@ -143,8 +161,6 @@ public class BookController {
 
         return "redirect:/";
     }
-
-
 
 
 }

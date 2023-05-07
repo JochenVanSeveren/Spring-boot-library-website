@@ -41,7 +41,7 @@ public class BookServiceImpl implements BookService {
         Book book6 = new Book("The Hobbit", Set.of(author6), "978-0-618-96864-0", 22.99, 3, Set.of(location2));
         Book book7 = new Book("Pride and Prejudice", Set.of(author7), "978-0-14-143951-8", 25.99, 4, Set.of(location3));
         Book book8 = new Book("Animal Farm", Set.of(author1), "978-0-451-52493-5", 19.99, 5, Set.of(location4));
-        Book book9 = new Book("The Catcher in the Rye", Set.of(author3), "978-0-316-76948-1", 28.99, 3, Set.of(location1));
+
         Book book10 = new Book("The Lord of the Rings: The Fellowship of the Ring", Set.of(author6), "978-0-618-00222-1", 32.99, 4, Set.of(location2));
         Book book11 = new Book("Sense and Sensibility", Set.of(author7), "978-0-14-143966-2", 26.99, 5, Set.of(location3));
         Book book12 = new Book("The Great Gatsby", Set.of(author4), "978-0-7432-7356-5", 21.99, 4, Set.of(location4));
@@ -49,8 +49,8 @@ public class BookServiceImpl implements BookService {
 
         author1.setBooks(Set.of(book1, book8, book11));
         author2.setBooks(Set.of(book2, book8, book12, book1));
-        author3.setBooks(Set.of(book3, book9, book12));
-        author4.setBooks(Set.of( book9));
+        author3.setBooks(Set.of(book3, book12));
+
         author5.setBooks(Set.of(book5, book10));
         author6.setBooks(Set.of(book6, book10));
         author7.setBooks(Set.of(book7, book11));
@@ -60,7 +60,7 @@ public class BookServiceImpl implements BookService {
         location3.setBook(book3);
 
 
-        this.books = new HashSet<>(Set.of(book1, book2, book3, book5, book6, book7, book8, book9, book10, book11, book12));
+        this.books = new HashSet<>(Set.of(book1, book2, book3, book5, book6, book7, book8, book10, book11, book12));
     }
 
     @Override
