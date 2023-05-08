@@ -44,11 +44,17 @@ public class ISBNValidator implements ConstraintValidator<ISBN, String> {
 
     private boolean isValidIsbn13(String digits) {
         int sum = 0;
-        for (int i = 0; i < 13; i++) {
+        for (int i = 0; i < 12; i++) {
             int digit = digits.charAt(i) - '0';
             sum += (i % 2 == 0) ? digit : 3 * digit;
         }
 
-        return sum % 10 == 0;
+        int checkDigit = 10 - (sum % 10);
+        if (checkDigit == 10) {
+            checkDigit = 0;
+        }
+
+        return checkDigit == (digits.charAt(12) - '0');
     }
+
 }

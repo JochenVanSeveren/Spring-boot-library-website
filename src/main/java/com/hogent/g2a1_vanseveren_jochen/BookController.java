@@ -8,6 +8,7 @@ import exception.GenericException;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,6 +25,7 @@ import java.util.Set;
 
 @Controller
 @Slf4j
+@ComponentScan({"com.hogent.g2a1_vanseveren_jochen", "service", "domain", "exception", "repository", "config", "validation"})
 public class BookController {
 
     @Autowired

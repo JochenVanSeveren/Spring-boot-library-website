@@ -27,8 +27,8 @@
     <h1>Add Book</h1>
     <div class="card">
         <div class="card-body">
-            <form method="post" th:action="@{/addBook}" th:object="${book}">
-                <div class="form-group">
+            <form id="add-book-form" method="post" th:action="@{/addBook}" th:object="${book}">
+            <div class="form-group">
                     <label for="title">Title:</label>
                     <input class="form-control" id="title" required th:field="*{title}" type="text">
                     <p class="error" th:errors="*{title}" th:if="${#fields.hasErrors('title')}"></p>
@@ -94,6 +94,8 @@
                     <button class="btn btn-primary mt-2" id="add-location-btn" type="button">Add Location</button>
                     <input id="location-data" name="locationData" type="hidden">
                     <span class="error" th:errors="*{locations}" th:if="${#fields.hasErrors('locations')}"></span>
+                    <p class="error" id="location-error"></p>
+
                 </div>
 
 
@@ -158,14 +160,24 @@
         $(this).parent().remove();
     });
 
-    // Before form submission, update the location-data input field
-    $('form').on('submit', function () {
+    $('#add-book-form').on('submit', function (e) {
+        var locationCount = $('.location-display').length;
+        if (locationCount < 1) {
+            e.preventDefault(); // Prevent form submission
+            $('#location-error').text('At least 1 location is required.'); // Show error message
+            return;
+        } else {
+            $('#location-error').text(''); // Clear error message
+        }
+
+        // Update the location-data input field
         var locationData = '';
         $('.location-display').each(function () {
             locationData += ($(this).text().replace('Remove', '')).trim() + ';';
         });
         $('#location-data').val(locationData);
     });
+
 </script>
 <script>
     <!--    authors     -->
