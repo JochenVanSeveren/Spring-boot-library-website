@@ -53,12 +53,12 @@
                         </span>
                     </td>
                     <td>
-                        <a class="btn btn-primary" th:href="@{'/bookDetails/' + ${book.isbn}}">View Details</a>
+                        <a class="btn btn-info" th:href="@{'/bookDetails/' + ${book.isbn}}">View Details</a>
                     </td>
                 </tr>
                 </tbody>
             </table>
-            <a class="btn btn-info" href="#">Most Popular Books</a>
+            <a class="btn btn-primary" href="#">Most Popular Books</a>
             <a class="btn btn-success" href="/addBook" th:if="${user.role == 'admin'}">Add Book</a></div>
     </div>
 
