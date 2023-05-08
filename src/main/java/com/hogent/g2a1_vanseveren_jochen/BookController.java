@@ -88,7 +88,6 @@ public class BookController {
                 result.rejectValue("locations", "Size.book.locations", "There must be at least 1 location");
             }
             if (result.hasErrors()) {
-
                 log.error("Errors in form");
                 log.error(result.toString());
                 Set<Author> globalAuthors = authorService.findAll();
@@ -106,7 +105,9 @@ public class BookController {
                     author.setBooks(new HashSet<>(List.of(book)));
                     authorService.save(author);
                 } else {
-                    author.getBooks().add(book);
+
+//                    TODO:
+//                    authorService.addBookToAuthor(author, book);
                     authorService.save(author);
                 }
                 authors.add(author);
@@ -134,6 +135,19 @@ public class BookController {
                 log.debug(item, x, y, name);
 
                 Location location = new Location(x, y, name, book);
+
+//                Location existingLocation = locationService.findAll().contains(location) ? locationService.findAll().stream().filter(l -> l.equals(location)).findFirst().get() : null;
+                boolean existsAlready = locationService.findAll().contains(location);
+                if (existsAlready) {
+                    result.rejectValue("locations", "Locations", "Location already exists");
+                    log.error("Errors in form, location already exists");
+                    log.error(result.toString());
+                    Set<Author> globalAuthors = authorService.findAll();
+                    model.addAttribute("globalAuthors", globalAuthors);
+                    return "bookForm";
+                } else locationService.save(location);
+
+
                 locations.add(location);
             }
 
@@ -145,8 +159,9 @@ public class BookController {
 
             bookService.save(book);
 
-            return "redirect:/";
+            return "redirect:/bookDetails/" + book.getIsbn();
         } catch (Exception e) {
+            e.printStackTrace();
             throw new GenericException("Error in form", e.getMessage());
         }
     }
@@ -159,7 +174,6 @@ public class BookController {
         model.addObject("errMsg", ex.getErrMsg());
         return model;
     }
-
 
 
 }
