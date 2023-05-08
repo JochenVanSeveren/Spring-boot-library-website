@@ -34,9 +34,9 @@ public class BookServiceImpl implements BookService {
         Book book1 =
                 new Book("1984", Set.of(author1, author2), "978-0-452-28423-4", 19.99, 4, Set.of(location1, location2));
         Book book2 = new Book("To Kill a Mockingbird", Set.of(author2), "978-0-06-093546-7", 24.99, 5, Set.of(location2));
-        Book book3 = new Book("The Catcher in the Rye", Set.of(author3), "978-0-316-76948-1", 29.99, 3, Set.of(location3));
+        Book book3 = new Book("The Catcher in the Rye", Set.of(author3), "9780316769174", 29.99, 3, Set.of(location3));
         Book book5 = new Book("Harry Potter and the Philosopher's Stone", Set.of(author5), "978-0-590-35340-3", 18.99, 5, Set.of(location1));
-        Book book6 = new Book("The Hobbit", Set.of(author6), "978-0-618-96864-0", 22.99, 3, Set.of(location2));
+        Book book6 = new Book("The Hobbit", Set.of(author6), "9780547928227", 22.99, 3, Set.of(location2));
         Book book7 = new Book("Pride and Prejudice", Set.of(author7), "978-0-14-143951-8", 25.99, 4, Set.of(location3));
         Book book8 = new Book("Animal Farm", Set.of(author1), "978-0-451-52493-5", 19.99, 5, Set.of(location4));
 

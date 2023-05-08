@@ -39,6 +39,7 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
+                    <th>Cover</th>
                     <th>Title</th>
                     <th>Author(s)</th>
                     <th></th>
@@ -46,11 +47,14 @@
                 </thead>
                 <tbody>
                 <tr th:each="book : ${books}">
+                    <td >
+                        <img th:src="@{'https://covers.openlibrary.org/b/isbn/' + ${book.isbn} + '-S.jpg'}" alt="Book cover" class="img-fluid" />
+                    </td>
                     <td th:text="${book.title}"></td>
                     <td>
-                        <span th:each="author, iterStat : ${book.authors}"
-                              th:text="${author.name + (iterStat.last ? '' : ', ')}">
-                        </span>
+                    <span th:each="author, iterStat : ${book.authors}"
+                          th:text="${author.name + (iterStat.last ? '' : ', ')}">
+                    </span>
                     </td>
                     <td>
                         <a class="btn btn-info" th:href="@{'/bookDetails/' + ${book.isbn}}">View Details</a>
@@ -75,8 +79,8 @@
             var authorSearchValue = $('#author-search').val().toLowerCase();
 
             $('tbody tr').each(function () {
-                var title = $(this).find('td:first').text().toLowerCase();
-                var authors = $(this).find('td:nth-child(2)').text().toLowerCase();
+                var title = $(this).find('td:nth-child(2)').text().toLowerCase();
+                var authors = $(this).find('td:nth-child(3)').text().toLowerCase();
 
                 if (title.indexOf(bookSearchValue) === -1 || authors.indexOf(authorSearchValue) === -1) {
                     $(this).attr('hidden', 'hidden');
