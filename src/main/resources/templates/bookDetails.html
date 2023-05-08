@@ -79,10 +79,17 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 <script>
     $(document).ready(function () {
-        $('#bookCoverImage').on('load', function () {
+        function handleImageLoad() {
             $('#spinner').hide();
-        });
+        }
+
+        $('#bookCoverImage').on('load', handleImageLoad);
+
+        if ($('#bookCoverImage')[0].complete) {
+            handleImageLoad();
+        }
     });
+
 </script>
 </body>
 </html>
