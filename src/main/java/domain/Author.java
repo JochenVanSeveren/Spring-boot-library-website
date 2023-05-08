@@ -22,10 +22,13 @@ public class Author implements Serializable {
     @Id
     private Long id;
 
-    @Getter @Setter private String name;
+    @Getter
+    @Setter
+    private String name;
 
     @ManyToMany(mappedBy = "authors")
-    @Getter @Setter
+    @Getter
+    @Setter
     private Set<Book> books = new HashSet<>();
 
     @Override

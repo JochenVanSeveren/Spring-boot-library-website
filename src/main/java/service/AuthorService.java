@@ -2,7 +2,6 @@ package service;
 
 import domain.Author;
 
-import java.util.List;
 import java.util.Set;
 
 public interface AuthorService {

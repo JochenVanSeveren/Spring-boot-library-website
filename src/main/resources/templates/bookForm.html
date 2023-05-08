@@ -2,12 +2,12 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Add Book</title>
     <link rel="stylesheet" th:href="@{/css/global.css}"/>
     <link rel="stylesheet" th:href="@{/css/bookForm.css}"/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="icon" href="/favicon.png" type="image/ico">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/favicon.png" rel="icon" type="image/ico">
     <style>
 
         @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
@@ -27,49 +27,49 @@
     <h1>Add Book</h1>
     <div class="card">
         <div class="card-body">
-            <form th:action="@{/addBook}" th:object="${book}" method="post">
+            <form method="post" th:action="@{/addBook}" th:object="${book}">
                 <div class="form-group">
                     <label for="title">Title:</label>
-                    <input type="text" class="form-control" id="title" th:field="*{title}" required>
-                    <p class="error" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></p>
+                    <input class="form-control" id="title" required th:field="*{title}" type="text">
+                    <p class="error" th:errors="*{title}" th:if="${#fields.hasErrors('title')}"></p>
                 </div>
 
                 <div class="form-group">
                     <label for="isbn">ISBN number:</label>
-                    <input type="text" class="form-control" id="isbn" th:field="*{isbn}"
-                           pattern="\d{3}-\d{1,5}-\d{1,7}-\d{1,6}-\d{1}" required>
-                    <p class="error" th:if="${#fields.hasErrors('isbn')}" th:errors="*{isbn}"></p>
+                    <input class="form-control" id="isbn" pattern="\d{3}-\d{1,5}-\d{1,7}-\d{1,6}-\d{1}" required
+                           th:field="*{isbn}" type="text">
+                    <p class="error" th:errors="*{isbn}" th:if="${#fields.hasErrors('isbn')}"></p>
                 </div>
                 <div class="form-group">
                     <label for="price">Purchase price:</label>
-                    <input type="number" class="form-control" id="price" th:field="*{price}" min="0.01" max="100"
-                           step="0.01">
-                    <p class="error" th:if="${#fields.hasErrors('price')}" th:errors="*{price}"></p>
+                    <input class="form-control" id="price" max="100" min="0.01" step="0.01" th:field="*{price}"
+                           type="number">
+                    <p class="error" th:errors="*{price}" th:if="${#fields.hasErrors('price')}"></p>
                 </div>
 
                 <div class="form-group">
                     <label for="authors">Authors:</label>
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" id="author-search" placeholder="Search author by name">
+                        <input class="form-control" id="author-search" placeholder="Search author by name" type="text">
                         <div class="input-group-append">
                             <button class="btn btn-outline-secondary" type="button">Search</button>
                         </div>
                     </div>
 
-                    <select multiple required class="form-control" style="height: 15rem;" id="authors"
-                            name="authorNames">
-                        <option th:each="author : ${globalAuthors}" th:value="${author.name}"
-                                th:text="${author.name}"></option>
+                    <select class="form-control" id="authors" multiple name="authorNames" required
+                            style="height: 15rem;">
+                        <option th:each="author : ${globalAuthors}" th:text="${author.name}"
+                                th:value="${author.name}"></option>
                     </select>
 
 
-                    <span th:if="${#fields.hasErrors('authors')}" th:errors="*{authors}" class="error"></span>
+                    <span class="error" th:errors="*{authors}" th:if="${#fields.hasErrors('authors')}"></span>
 
 
-                    <div style="display: flex; justify-content: space-between;" class="mt-4">
-                        <label for="new-author"></label><input type="text" class="form-control" id="new-author"
-                                                               placeholder="Add new author to the list">
-                        <button type="button" id="add-author-btn" class="btn btn-primary">Add</button>
+                    <div class="mt-4" style="display: flex; justify-content: space-between;">
+                        <label for="new-author"></label><input class="form-control" id="new-author" placeholder="Add new author to the list"
+                                                               type="text">
+                        <button class="btn btn-primary" id="add-author-btn" type="button">Add</button>
                     </div>
 
                 </div>
@@ -80,28 +80,28 @@
                     <div class="d-flex">
                         <div id="location-inputs">
                             <div class="location-input-row d-flex">
-                                <input type="number" class="form-control mr-2" id="plaatscode1"
-                                       placeholder="Plaatscode1">
-                                <input type="number" class="form-control mr-2" id="plaatscode2"
-                                       placeholder="Plaatscode2">
-                                <input type="text" class="form-control mr-2" id="plaatsnaam" placeholder="Plaatsnaam">
+                                <input class="form-control mr-2" id="plaatscode1" placeholder="Plaatscode1"
+                                       type="number">
+                                <input class="form-control mr-2" id="plaatscode2" placeholder="Plaatscode2"
+                                       type="number">
+                                <input class="form-control mr-2" id="plaatsnaam" placeholder="Plaatsnaam" type="text">
                             </div>
                         </div>
-                        <div id="location-list" class="mt-2"></div>
+                        <div class="mt-2" id="location-list"></div>
                     </div>
                     <p class="error" id="plaatscode-error"></p>
                     <p class="error" id="plaatsnaam-error"></p>
-                    <button type="button" id="add-location-btn" class="btn btn-primary mt-2">Add Location</button>
-                    <input type="hidden" name="locationData" id="location-data">
-                    <span th:if="${#fields.hasErrors('locations')}" th:errors="*{locations}" class="error"></span>
+                    <button class="btn btn-primary mt-2" id="add-location-btn" type="button">Add Location</button>
+                    <input id="location-data" name="locationData" type="hidden">
+                    <span class="error" th:errors="*{locations}" th:if="${#fields.hasErrors('locations')}"></span>
                 </div>
 
 
                 <div style="display: flex; justify-content: space-between;">
                     <!--            <button type="button" id="add-location" class="btn btn-secondary mb-2">Add Location</button>-->
                     <div>
-                        <a href="/" class="btn btn-danger mb-2">Cancel</a>
-                        <button type="submit" class="btn btn-primary mb-2">Add Book</button>
+                        <a class="btn btn-danger mb-2" href="/">Cancel</a>
+                        <button class="btn btn-primary mb-2" type="submit">Add Book</button>
                     </div>
                 </div>
 

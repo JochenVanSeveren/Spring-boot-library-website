@@ -4,16 +4,16 @@
     <meta charset="UTF-8">
     <title th:text="#{error.title}">Error</title>
     <link rel="stylesheet" th:href="@{/css/global.css}"/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body >
+<body>
 <div class="container">
     <div class="card">
         <div class="card-body" style="background-color: #f8d7da">
             <h1 class="text-danger display-4" th:text="#{error.message.something_went_wrong}">Something went wrong</h1>
             <p class="lead" th:text="#{error.message.page_not_found}">We're sorry, but the page you requested could not
                 be found.</p>
-            <a href="/" class="btn btn-danger" th:text="#{error.message.go_back}">Go back to home</a></div>
+            <a class="btn btn-danger" href="/" th:text="#{error.message.go_back}">Go back to home</a></div>
     </div>
 </div>
 </body>

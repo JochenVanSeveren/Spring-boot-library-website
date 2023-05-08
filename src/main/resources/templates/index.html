@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
     <title>Book Catalog</title>
     <link rel="stylesheet" th:href="@{/css/global.css}"/>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="icon" href="/favicon.png" type="image/ico">
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/favicon.png" rel="icon" type="image/ico">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
 
@@ -22,6 +22,20 @@
 
     <div class="card">
         <div class="card-body">
+
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="book-search-label">Title:</span>
+                </div>
+                <input class="form-control mr-4" id="book-search" placeholder="Search book by title" type="text" aria-describedby="book-search-label">
+
+                <div class="input-group-prepend ml-4">
+                    <span class="input-group-text" id="author-search-label">Author:</span>
+                </div>
+                <input class="form-control" id="author-search" placeholder="Search book by author" type="text" aria-describedby="author-search-label">
+            </div>
+
+
             <table class="table table-striped">
                 <thead>
                 <tr>
@@ -39,18 +53,46 @@
                         </span>
                     </td>
                     <td>
-                        <a th:href="@{'/bookDetails/' + ${book.isbn}}" class="btn btn-primary">View Details</a>
+                        <a class="btn btn-primary" th:href="@{'/bookDetails/' + ${book.isbn}}">View Details</a>
                     </td>
                 </tr>
                 </tbody>
             </table>
-            <a href="#" class="btn btn-info">Most Popular Books</a>
-            <a th:if="${user.role == 'admin'}" href="/addBook" class="btn btn-success">Add Book</a></div>
+            <a class="btn btn-info" href="#">Most Popular Books</a>
+            <a class="btn btn-success" href="/addBook" th:if="${user.role == 'admin'}">Add Book</a></div>
     </div>
 
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+    $(document).ready(function () {
+
+        // Combined search functionality
+        function searchBooksAndAuthors() {
+            var bookSearchValue = $('#book-search').val().toLowerCase();
+            var authorSearchValue = $('#author-search').val().toLowerCase();
+
+            $('tbody tr').each(function () {
+                var title = $(this).find('td:first').text().toLowerCase();
+                var authors = $(this).find('td:nth-child(2)').text().toLowerCase();
+
+                if (title.indexOf(bookSearchValue) === -1 || authors.indexOf(authorSearchValue) === -1) {
+                    $(this).attr('hidden', 'hidden');
+                } else {
+                    $(this).removeAttr('hidden');
+                }
+            });
+        }
+
+        // Trigger search when input changes
+        $('#book-search, #author-search').on('input', searchBooksAndAuthors);
+
+        // Trigger search when search button is clicked
+        $('#search-button').on('click', searchBooksAndAuthors);
+
+    });
+</script>
 </body>
 </html>

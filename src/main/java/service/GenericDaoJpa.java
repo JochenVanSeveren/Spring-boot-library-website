@@ -4,14 +4,13 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.transaction.annotation.Transactional;
 
-
 import java.util.List;
 
 @Transactional
 public class GenericDaoJpa<T> implements GenericDao<T> {
 
-    private Class<T> type;
     protected EntityManager em;
+    private Class<T> type;
 
     public GenericDaoJpa(Class<T> type) {
         super();
@@ -57,12 +56,11 @@ public class GenericDaoJpa<T> implements GenericDao<T> {
     public T update(T object) {
         return em.merge(object);
     }
-    
+
     @Override
-    public T getById(int id) 
-    {
-    	T entity = this.em.find(this.type, id);
-    	return entity;
+    public T getById(int id) {
+        T entity = this.em.find(this.type, id);
+        return entity;
     }
 
 }
