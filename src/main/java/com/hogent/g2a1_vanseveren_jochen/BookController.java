@@ -4,6 +4,7 @@ import domain.Author;
 import domain.Book;
 import domain.Location;
 import domain.User;
+import exception.GenericException;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import service.AuthorService;
 import service.BookService;
 import service.LocationService;
@@ -73,75 +75,89 @@ public class BookController {
             @RequestParam("authorNames") String[] authorNames
             , @RequestParam("locationData") String locationData
     ) {
-        if (bookService.findByIsbn(book.getIsbn()) != null) {
-            result.rejectValue("isbn", "Duplicate.book.isbn", "This ISBN already exists");
-        }
-        if (authorNames.length > Book.MAX_AUTHORS || authorNames.length < 1) {
-            result.rejectValue("authors", "Size.book.authors", "There must be between 1 and 3 authors");
-        }
-        if (locationData == null) {
-            result.rejectValue("locations", "Size.book.locations", "There must be at least 1 location");
-        }
-        if (result.hasErrors()) {
-
-            log.error("Errors in form");
-            log.error(result.toString());
-            Set<Author> globalAuthors = authorService.findAll();
-            model.addAttribute("globalAuthors", globalAuthors);
-            return "bookForm";
-        }
-
-
-        Set<Author> authors = new HashSet<>();
-        for (String authorName : authorNames) {
-            Author author = authorService.findByName(authorName);
-            if (author == null) {
-                author = new Author();
-                author.setName(authorName);
-                author.setBooks(new HashSet<>(List.of(book)));
-                authorService.save(author);
-            } else {
-                author.getBooks().add(book);
-                authorService.save(author);
+        try {
+            if (bookService.findByIsbn(book.getIsbn()) != null) {
+                result.rejectValue("isbn", "Duplicate.book.isbn", "This ISBN already exists");
             }
-            authors.add(author);
+            if (authorNames.length > Book.MAX_AUTHORS || authorNames.length < 1) {
+                result.rejectValue("authors", "Size.book.authors", "There must be between 1 and 3 authors");
+            }
+            if (locationData == null) {
+                result.rejectValue("locations", "Size.book.locations", "There must be at least 1 location");
+            }
+            if (result.hasErrors()) {
+
+                log.error("Errors in form");
+                log.error(result.toString());
+                Set<Author> globalAuthors = authorService.findAll();
+                model.addAttribute("globalAuthors", globalAuthors);
+                return "bookForm";
+            }
+
+
+            Set<Author> authors = new HashSet<>();
+            for (String authorName : authorNames) {
+                Author author = authorService.findByName(authorName);
+                if (author == null) {
+                    author = new Author();
+                    author.setName(authorName);
+                    author.setBooks(new HashSet<>(List.of(book)));
+                    authorService.save(author);
+                } else {
+                    author.getBooks().add(book);
+                    authorService.save(author);
+                }
+                authors.add(author);
+            }
+
+
+            book.setAuthors(authors);
+
+
+            Set<Location> locations = new HashSet<>();
+
+            log.debug("locationData" + locationData);
+
+            assert locationData != null;
+            String[] items = locationData.split(";");
+            for (String item : items) {
+                String[] parts = item.split(",");
+                String value1 = parts[0].trim();
+                String value2 = parts[1].trim();
+                int index = value1.indexOf("-");
+                int x = Integer.parseInt(value1.substring(0, index));
+                int y = Integer.parseInt(value1.substring(index + 1));
+                String name = value2.trim();
+
+                log.debug(item, x, y, name);
+
+                Location location = new Location(x, y, name, book);
+                locations.add(location);
+            }
+
+            book.setLocations(locations);
+
+            locations.forEach(location -> locationService.save(location));
+
+            log.info(book.toString());
+
+            bookService.save(book);
+
+            return "redirect:/";
+        } catch (Exception e) {
+            throw new GenericException("Error in form", e.getMessage());
         }
-
-
-        book.setAuthors(authors);
-
-
-        Set<Location> locations = new HashSet<>();
-
-        log.debug("locationData" + locationData);
-
-        assert locationData != null;
-        String[] items = locationData.split(";");
-        for (String item : items) {
-            String[] parts = item.split(",");
-            String value1 = parts[0].trim();
-            String value2 = parts[1].trim();
-            int index = value1.indexOf("-");
-            int x = Integer.parseInt(value1.substring(0, index));
-            int y = Integer.parseInt(value1.substring(index + 1));
-            String name = value2.trim();
-
-            log.debug(item, x, y, name);
-
-            Location location = new Location(x, y, name, book);
-            locations.add(location);
-        }
-
-        book.setLocations(locations);
-
-        locations.forEach(location -> locationService.save(location));
-
-        log.info(book.toString());
-
-        bookService.save(book);
-
-        return "redirect:/";
     }
+
+    @ExceptionHandler(GenericException.class)
+    public ModelAndView handleCustomException(GenericException ex) {
+        ModelAndView model
+                = new ModelAndView("error/error");
+        model.addObject("errCode", ex.getErrCode());
+        model.addObject("errMsg", ex.getErrMsg());
+        return model;
+    }
+
 
 
 }

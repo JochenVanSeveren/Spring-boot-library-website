@@ -10,8 +10,12 @@
 <div class="container">
     <div class="card">
         <div class="card-body" style="background-color: #f8d7da">
-            <h1 class="text-danger display-4" th:text="#{error.message.something_went_wrong}">Something went wrong</h1>
-            <p class="lead" th:text="#{error.message.page_not_found}">We're sorry, but the page you requested could not
+
+            <h1 th:if="${errCode}" th:text="|${errCode} : System Errors|"></h1>
+            <h1 th:unless="${errCode}" class="text-danger display-4" th:text="#{error.message.something_went_wrong}">Something went wrong</h1>
+            <h4 th:if="${errMsg}" th:text="${errMsg}"></h4>
+
+            <p th:unless="${errMsg}" class="lead" th:text="#{error.message.page_not_found}">We're sorry, but the page you requested could not
                 be found.</p>
             <a class="btn btn-danger" href="/" th:text="#{error.message.go_back}">Go back to home</a></div>
     </div>
