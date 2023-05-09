@@ -85,8 +85,8 @@ public class G2A1VanSeverenJochenApplication implements WebMvcConfigurer {
     @Bean
     public LocaleResolver localeResolver() {
         SessionLocaleResolver localeResolver = new SessionLocaleResolver();
-        localeResolver.setDefaultLocale(Locale.forLanguageTag("nl-BE"));
-//        localeResolver.setDefaultLocale(Locale.ENGLISH);
+//        localeResolver.setDefaultLocale(Locale.forLanguageTag("nl-BE"));
+        localeResolver.setDefaultLocale(Locale.ENGLISH);
         return localeResolver;
     }
 
