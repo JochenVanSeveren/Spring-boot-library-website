@@ -39,12 +39,15 @@ public class Book implements Serializable {
     //    @Min(value = 1, message = "{book.price.min}")
 //    @Max(value = 50, message = "{book.price.max}")
     @NotNull
-    @Range(min = 1, max = 50, message = "{book.price.range}")
+    @Range(min = 1, max = 100, message = "{book.price.range}")
     private double price;
 
     private int stars;
     @OneToMany(mappedBy = "books")
     private Set<Location> locations = new HashSet<>();
+
+    @ManyToMany(mappedBy = "favoriteBooks")
+    private Set<User> favoritedByUsers = new HashSet<>();
 
     public Book(String title, Set<Author> authors, String isbn, double price, int stars, Set<Location> locations) {
         this.title = title;

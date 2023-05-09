@@ -3,13 +3,18 @@ package service;
 import domain.Author;
 import domain.Book;
 import domain.Location;
+import domain.User;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+//import repository.BookRepository;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 @Slf4j
 public class BookServiceImpl implements BookService {
+
+//    @Autowired
+//    private BookRepository bookRepository;
 
     private Set<Book> books;
 
@@ -114,7 +119,6 @@ public class BookServiceImpl implements BookService {
         location9.setBook(book16);
 
 
-
         this.books = new HashSet<>(Set.of(book1, book2, book3, book4, book5, book6, book7, book8, book9, book10, book11, book12, book13, book14, book15, book16, book18, book19, book20));
 
     }
@@ -134,4 +138,23 @@ public class BookServiceImpl implements BookService {
         log.info("Saving book: " + book);
         books.add(book);
     }
+
+    public Set<Book> findMostPopularBooks() {
+        List<Book> allBooks = (List<Book>) findAll();
+        allBooks.sort((book1, book2) -> {
+            int diff = getFavoritedByUsers(book2.getId()).size() - getFavoritedByUsers(book1.getId()).size();
+            if (diff == 0) {
+                return book1.getTitle().compareTo(book2.getTitle());
+            }
+            return diff;
+        });
+        return (Set<Book>) allBooks;
+    }
+
+    public Set<User> getFavoritedByUsers(Long bookId) {
+//        Optional<Book> book = bookRepository.findById(bookId);
+//        return book.map(Book::getFavoritedByUsers).orElse(Collections.emptySet());
+        throw new UnsupportedOperationException();
+    }
 }
+

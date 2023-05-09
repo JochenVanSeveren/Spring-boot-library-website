@@ -14,6 +14,7 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor
@@ -40,8 +41,9 @@ public class User implements Serializable {
     @JoinTable(
             name = "user_favorite_books",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "book_id"))
-    private Set<Book> favorites = new HashSet<>();
+            inverseJoinColumns = @JoinColumn(name = "book_id")
+    )
+    private Set<Book> favoriteBooks = new HashSet<>();
 
     public User(String role, boolean b) {
         this.role = role;

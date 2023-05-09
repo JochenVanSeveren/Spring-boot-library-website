@@ -79,7 +79,7 @@ public class BookTest {
 
         Set<ConstraintViolation<Book>> violations = validator.validate(book);
         assertEquals(1, violations.size());
-        assertEquals("{book.price.min}", violations.iterator().next().getMessage());
+        assertEquals("{book.price.range}", violations.iterator().next().getMessage());
     }
 
     // Test for price greater than 100
@@ -92,7 +92,7 @@ public class BookTest {
 
         Set<ConstraintViolation<Book>> violations = validator.validate(book);
         assertEquals(1, violations.size());
-        assertEquals("{book.price.max}", violations.iterator().next().getMessage());
+        assertEquals("{book.price.range}", violations.iterator().next().getMessage());
     }
 
 

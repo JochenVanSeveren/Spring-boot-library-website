@@ -3,6 +3,7 @@ package domain;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -24,6 +25,7 @@ public class Author implements Serializable {
 
     @Getter
     @Setter
+    @NotNull
     private String name;
 
     @ManyToMany(mappedBy = "authors")

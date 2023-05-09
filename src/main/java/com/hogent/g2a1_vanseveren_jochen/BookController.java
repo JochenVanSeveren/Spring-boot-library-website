@@ -48,6 +48,16 @@ public class BookController {
         return "index";
     }
 
+    @GetMapping("/mostPopularBooks")
+    public String showMostPopularBooks(Model model) {
+        Set<Book> books = bookService.findMostPopularBooks();
+        model.addAttribute("books", books);
+//        TODO: replace the following line with the code to get the currently logged in user.
+        model.addAttribute("user", new User("admin", false));
+
+        return "index";
+    }
+
     @GetMapping("/bookDetails/{isbn}")
     public String showBookDetails(@PathVariable("isbn") String isbn, Model model) {
         Book book = bookService.findByIsbn(isbn);
