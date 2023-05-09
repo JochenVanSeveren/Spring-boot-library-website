@@ -50,9 +50,11 @@
                 <div class="form-group">
                     <label for="authors" th:text="#{addbook.label.authors}"></label>
                     <div class="input-group mb-3">
-                        <input class="form-control" id="author-search" th:placeholder="#{addbook.placeholder.search}" type="text">
+                        <input class="form-control" id="author-search" th:placeholder="#{addbook.placeholder.search}"
+                               type="text">
                         <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button" th:text="#{addbook.button.search}"></button>
+                            <button class="btn btn-outline-secondary" type="button"
+                                    th:text="#{addbook.button.search}"></button>
                         </div>
                     </div>
 
@@ -67,9 +69,11 @@
 
 
                     <div class="mt-4" style="display: flex; justify-content: space-between;">
-                        <label for="new-author"></label><input class="form-control" id="new-author" th:placeholder="#{addbook.placeholder.new_author}"
+                        <label for="new-author"></label><input class="form-control" id="new-author"
+                                                               th:placeholder="#{addbook.placeholder.new_author}"
                                                                type="text">
-                        <button class="btn btn-primary" style="width: 10rem" id="add-author-btn" type="button" th:text="#{addbook.button.add_author}"></button>
+                        <button class="btn btn-primary" style="width: 10rem" id="add-author-btn" type="button"
+                                th:text="#{addbook.button.add_author}"></button>
                     </div>
 
                 </div>
@@ -80,18 +84,22 @@
                     <div class="d-flex">
                         <div id="location-inputs">
                             <div class="location-input-row d-flex">
-                                <input class="form-control mr-2" id="plaatscode1" th:placeholder="#{addbook.placeholder.plaatscode1}"
+                                <input class="form-control mr-2" id="plaatscode1"
+                                       th:placeholder="#{addbook.placeholder.plaatscode1}"
                                        type="number">
-                                <input class="form-control mr-2" id="plaatscode2" th:placeholder="#{addbook.placeholder.plaatscode2}"
+                                <input class="form-control mr-2" id="plaatscode2"
+                                       th:placeholder="#{addbook.placeholder.plaatscode2}"
                                        type="number">
-                                <input class="form-control mr-2" id="plaatsnaam" th:placeholder="#{addbook.placeholder.plaatsnaam}" type="text">
+                                <input class="form-control mr-2" id="plaatsnaam"
+                                       th:placeholder="#{addbook.placeholder.plaatsnaam}" type="text">
                             </div>
                         </div>
                         <div class="mt-2" id="location-list"></div>
                     </div>
                     <p class="error" id="plaatscode-error"></p>
                     <p class="error" id="plaatsnaam-error"></p>
-                    <button class="btn btn-primary mt-2" id="add-location-btn" type="button" th:text="#{addbook.button.add_location}"></button>
+                    <button class="btn btn-primary mt-2" id="add-location-btn" type="button"
+                            th:text="#{addbook.button.add_location}"></button>
                     <input id="location-data" name="locationData" type="hidden">
                     <span class="error" th:errors="*{locations}" th:if="${#fields.hasErrors('locations')}"></span>
                     <p class="error" id="location-error"></p>
@@ -102,7 +110,8 @@
                 <div style="display: flex; justify-content: space-between;">
                     <div>
                         <a class="btn btn-danger mb-2" href="/" th:text="#{addbook.button.cancel}"></a>
-                        <button class="btn btn-primary mb-2" type="submit" th:text="#{addbook.button.add_book}"></button>
+                        <button class="btn btn-primary mb-2" type="submit"
+                                th:text="#{addbook.button.add_book}"></button>
                     </div>
                 </div>
 
@@ -113,7 +122,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-<script>
+<script th:inline="javascript">
 
     // Add location to the list
     // Add location to the list
@@ -126,7 +135,7 @@
         // Validate plaatscode1 and plaatscode2
         if (!Number.isInteger(plaatscode1) || plaatscode1 < 50 || plaatscode1 > 300 || !Number.isInteger(plaatscode2) || plaatscode2 < 50 || plaatscode2 > 300 || Math.abs(plaatscode2 - plaatscode1) < 50) {
             isValid = false;
-            $('#plaatscode-error').text('Plaatscode1 and Plaatscode2 must be integers between 50 and 300 (inclusive). The difference between Plaatscode1 and Plaatscode2 must be at least 50.');
+            $('#plaatscode-error').text(/*[[#{plaatscode.error}]]*/ 'Default message if key not found.');
         } else {
             $('#plaatscode-error').text('');
         }
@@ -134,7 +143,7 @@
         // Validate plaatsnaam
         if (!/^[a-zA-Z]+$/.test(plaatsnaam)) {
             isValid = false;
-            $('#plaatsnaam-error').text('Plaatsnaam must only contain letters.');
+            $('#plaatsnaam-error').text(/*[[#{plaatsnaam.error}]]*/ 'Default message if key not found.');
         } else {
             $('#plaatsnaam-error').text('');
         }
@@ -142,7 +151,10 @@
         // If validation passes, add the location
         if (isValid) {
             var locationDisplay = $('<div>', {class: 'location-display'}).text(plaatscode1 + '-' + plaatscode2 + ', ' + plaatsnaam);
-            var locationRemoveBtn = $('<button>', {class: 'btn btn-sm btn-danger ml-2', type: 'button'}).text('Remove');
+            var locationRemoveBtn = $('<button>', {
+                class: 'btn btn-sm btn-danger ml-2',
+                type: 'button'
+            }).text(/*[[#{remove.btn.text}]]*/ 'Default message if key not found.');
             locationDisplay.append(locationRemoveBtn);
             $('#location-list').append(locationDisplay);
 
@@ -163,22 +175,22 @@
         var locationCount = $('.location-display').length;
         if (locationCount < 1) {
             e.preventDefault(); // Prevent form submission
-            $('#location-error').text('At least 1 location is required.'); // Show error message
-            return;
+            $('#location-error').text(/*[[#{location.error}]]*/ 'Default message if key not found.'); // Show error message            return;
         } else {
             $('#location-error').text(''); // Clear error message
         }
 
         // Update the location-data input field
         var locationData = '';
+        var removeText = /*[[#{remove.text}]]*/ 'Default message if key not found.';
         $('.location-display').each(function () {
-            locationData += ($(this).text().replace('Remove', '')).trim() + ';';
+            locationData += ($(this).text().replace(removeText, '')).trim() + ';';
         });
         $('#location-data').val(locationData);
     });
 
 </script>
-<script>
+<script th:inline="javascript">
     <!--    authors     -->
     $(document).ready(function () {
         $('#author-search').on('input', function () {

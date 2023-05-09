@@ -29,14 +29,14 @@ public class Book implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-    @NotBlank(message = "Title cannot be empty")
+    @NotBlank(message = "{book.title.notBlank}")
     private String title;
     @ManyToMany
     private Set<Author> authors = new HashSet<>();
     @ISBN
     private String isbn;
-    @Min(value = 1, message = "Price must be greater than 0")
-    @Max(value = 100, message = "Price must be less than 100")
+    @Min(value = 1, message = "{book.price.min}")
+    @Max(value = 100, message = "{book.price.max}")
     private double price;
     private int stars;
     @OneToMany(mappedBy = "books")

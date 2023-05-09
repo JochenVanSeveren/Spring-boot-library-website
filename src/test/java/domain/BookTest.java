@@ -41,7 +41,7 @@ public class BookTest {
 
         Set<ConstraintViolation<Book>> violations = validator.validate(book);
         assertEquals(1, violations.size());
-        assertEquals("Invalid ISBN number", violations.iterator().next().getMessage());
+        assertEquals("{isbn.error}", violations.iterator().next().getMessage());
     }
 
     // Test for empty title
@@ -54,7 +54,7 @@ public class BookTest {
 
         Set<ConstraintViolation<Book>> violations = validator.validate(book);
         assertEquals(1, violations.size());
-        assertEquals("Title cannot be empty", violations.iterator().next().getMessage());
+        assertEquals("{book.title.notBlank}", violations.iterator().next().getMessage());
     }
 
     // Test for valid price
@@ -79,7 +79,7 @@ public class BookTest {
 
         Set<ConstraintViolation<Book>> violations = validator.validate(book);
         assertEquals(1, violations.size());
-        assertEquals("Price must be greater than 0", violations.iterator().next().getMessage());
+        assertEquals("{book.price.min}", violations.iterator().next().getMessage());
     }
 
     // Test for price greater than 100
@@ -92,7 +92,7 @@ public class BookTest {
 
         Set<ConstraintViolation<Book>> violations = validator.validate(book);
         assertEquals(1, violations.size());
-        assertEquals("Price must be less than 100", violations.iterator().next().getMessage());
+        assertEquals("{book.price.max}", violations.iterator().next().getMessage());
     }
 
 

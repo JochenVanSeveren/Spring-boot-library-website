@@ -11,8 +11,7 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ISBN {
 
-    String message() default "Invalid ISBN number";
-
+    String message() default "{isbn.error}";
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
