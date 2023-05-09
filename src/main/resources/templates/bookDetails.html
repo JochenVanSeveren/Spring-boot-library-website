@@ -20,24 +20,22 @@
 </head>
 <body>
 <div class="container">
-    <h1>Book Details</h1>
+    <h1 th:text="#{book.details}"></h1>
 
     <div class="row">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-body">
-
                     <h4 class="card-title font-weight-bold" th:text="${book.title}"></h4>
                     <ul class="list-unstyled mb-4">
                         <li th:each="author : ${book.authors}" th:text="${author.name}"></li>
                     </ul>
-
                     <p class="card-text">
-                        <strong>ISBN:</strong> <span th:text="${book.isbn}"></span><br>
-                        <strong>Price:</strong> <span th:text="${#numbers.formatDecimal(book.price, 1, 2)}"></span>
+                        <strong th:text="#{book.isbn}"></strong>: <span th:text="${book.isbn}"></span><br>
+                        <strong th:text="#{book.price}"></strong>: <span th:text="${#numbers.formatDecimal(book.price, 1, 2)}"></span>
                         €<br>
-                        <strong>Stars:</strong> <span th:text="${book.stars}"></span><br>
-                        <strong>Locations:</strong>
+                        <strong th:text="#{book.stars}"></strong>: <span th:text="${book.stars}"></span><br>
+                        <strong th:text="#{book.locations}"></strong>:
                     </p>
                     <ul class="list-group mb-4">
                         <li class="list-group-item" th:each="location : ${book.locations}">
@@ -46,18 +44,16 @@
                             <span class="ml-3" th:text="${location.plaatscode2}"></span>
                         </li>
                     </ul>
-
                     <div th:if="${!user.isFavoriteLimitReached}">
                         <form method="post" th:action="@{/toggleFavorite}">
                             <input th:name="bookIsbn" th:value="${book.isbn}" type="hidden">
-                            <!--          <button type="submit" class="btn btn-primary" th:if="${!isFavorite}">Add to Favorites</button>-->
-                            <!--          <button type="submit" class="btn btn-danger" th:if="${isFavorite}">Remove from Favorites</button>-->
+<!--                            <button type="submit" class="btn btn-primary" th:if="${!isFavorite}" th:text="#{book.add_to_favorites}"></button>-->
+<!--                            <button type="submit" class="btn btn-danger" th:if="${isFavorite}" th:text="#{book.remove_from_favorites}"></button>-->
+
                         </form>
                     </div>
-
-                    <a class="btn btn-primary mt-3" href="/">Back to Catalog</a>
+                    <a class="btn btn-primary mt-3" th:href="@{/}" th:text="#{book.back_to_catalog}"></a>
                 </div>
-
             </div>
         </div>
         <div class="col-md-4 d-flex align-items-start justify-content-center">
@@ -68,11 +64,7 @@
                      alt="Book cover" class="img-fluid border rounded"/>
             </div>
         </div>
-
-
     </div>
-
-
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>

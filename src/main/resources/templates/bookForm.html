@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Add Book</title>
+    <title th:text="#{addbook.title}"></title>
     <link rel="stylesheet" th:href="@{/css/global.css}"/>
     <link rel="stylesheet" th:href="@{/css/bookForm.css}"/>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
@@ -24,35 +24,35 @@
 </head>
 <body>
 <div class="container">
-    <h1>Add Book</h1>
+    <h1 th:text="#{addbook.title}"></h1>
     <div class="card">
         <div class="card-body">
             <form id="add-book-form" method="post" th:action="@{/addBook}" th:object="${book}">
-            <div class="form-group">
-                    <label for="title">Title:</label>
+                <div class="form-group">
+                    <label for="title" th:text="#{addbook.label.title}"></label>
                     <input class="form-control" id="title" required th:field="*{title}" type="text">
                     <p class="error" th:errors="*{title}" th:if="${#fields.hasErrors('title')}"></p>
                 </div>
 
                 <div class="form-group">
-                    <label for="isbn">ISBN number:</label>
+                    <label for="isbn" th:text="#{addbook.label.isbn}"></label>
                     <input class="form-control" id="isbn" pattern="\d{3}-\d{1,5}-\d{1,7}-\d{1,6}-\d{1}" required
                            th:field="*{isbn}" type="text">
                     <p class="error" th:errors="*{isbn}" th:if="${#fields.hasErrors('isbn')}"></p>
                 </div>
                 <div class="form-group">
-                    <label for="price">Purchase price:</label>
+                    <label for="price" th:text="#{addbook.label.price}"></label>
                     <input class="form-control" id="price" max="100" min="0.01" step="0.01" th:field="*{price}"
                            type="number">
                     <p class="error" th:errors="*{price}" th:if="${#fields.hasErrors('price')}"></p>
                 </div>
 
                 <div class="form-group">
-                    <label for="authors">Authors:</label>
+                    <label for="authors" th:text="#{addbook.label.authors}"></label>
                     <div class="input-group mb-3">
-                        <input class="form-control" id="author-search" placeholder="Search author by name" type="text">
+                        <input class="form-control" id="author-search" th:placeholder="#{addbook.placeholder.search}" type="text">
                         <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button">Search</button>
+                            <button class="btn btn-outline-secondary" type="button" th:text="#{addbook.button.search}"></button>
                         </div>
                     </div>
 
@@ -67,31 +67,31 @@
 
 
                     <div class="mt-4" style="display: flex; justify-content: space-between;">
-                        <label for="new-author"></label><input class="form-control" id="new-author" placeholder="Add new author to the list"
+                        <label for="new-author"></label><input class="form-control" id="new-author" th:placeholder="#{addbook.placeholder.new_author}"
                                                                type="text">
-                        <button class="btn btn-primary" id="add-author-btn" type="button">Add</button>
+                        <button class="btn btn-primary" style="width: 10rem" id="add-author-btn" type="button" th:text="#{addbook.button.add_author}"></button>
                     </div>
 
                 </div>
 
                 <!-- Add Location -->
                 <div class="form-group">
-                    <label for="location-inputs">Locations:</label>
+                    <label for="location-inputs" th:text="#{addbook.label.locations}"></label>
                     <div class="d-flex">
                         <div id="location-inputs">
                             <div class="location-input-row d-flex">
-                                <input class="form-control mr-2" id="plaatscode1" placeholder="Plaatscode1"
+                                <input class="form-control mr-2" id="plaatscode1" th:placeholder="#{addbook.placeholder.plaatscode1}"
                                        type="number">
-                                <input class="form-control mr-2" id="plaatscode2" placeholder="Plaatscode2"
+                                <input class="form-control mr-2" id="plaatscode2" th:placeholder="#{addbook.placeholder.plaatscode2}"
                                        type="number">
-                                <input class="form-control mr-2" id="plaatsnaam" placeholder="Plaatsnaam" type="text">
+                                <input class="form-control mr-2" id="plaatsnaam" th:placeholder="#{addbook.placeholder.plaatsnaam}" type="text">
                             </div>
                         </div>
                         <div class="mt-2" id="location-list"></div>
                     </div>
                     <p class="error" id="plaatscode-error"></p>
                     <p class="error" id="plaatsnaam-error"></p>
-                    <button class="btn btn-primary mt-2" id="add-location-btn" type="button">Add Location</button>
+                    <button class="btn btn-primary mt-2" id="add-location-btn" type="button" th:text="#{addbook.button.add_location}"></button>
                     <input id="location-data" name="locationData" type="hidden">
                     <span class="error" th:errors="*{locations}" th:if="${#fields.hasErrors('locations')}"></span>
                     <p class="error" id="location-error"></p>
@@ -100,10 +100,9 @@
 
 
                 <div style="display: flex; justify-content: space-between;">
-                    <!--            <button type="button" id="add-location" class="btn btn-secondary mb-2">Add Location</button>-->
                     <div>
-                        <a class="btn btn-danger mb-2" href="/">Cancel</a>
-                        <button class="btn btn-primary mb-2" type="submit">Add Book</button>
+                        <a class="btn btn-danger mb-2" href="/" th:text="#{addbook.button.cancel}"></a>
+                        <button class="btn btn-primary mb-2" type="submit" th:text="#{addbook.button.add_book}"></button>
                     </div>
                 </div>
 
@@ -226,3 +225,4 @@
 
 </body>
 </html>
+

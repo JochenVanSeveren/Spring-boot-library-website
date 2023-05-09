@@ -96,24 +96,7 @@ public class BookController {
             }
 
 
-            Set<Author> authors = new HashSet<>();
-            for (String authorName : authorNames) {
-                Author author = authorService.findByName(authorName);
-                if (author == null) {
-                    author = new Author();
-                    author.setName(authorName);
-                    author.setBooks(new HashSet<>(List.of(book)));
-                    authorService.save(author);
-                } else {
-
-//                    TODO:
-//                    authorService.addBookToAuthor(author, book);
-                    authorService.save(author);
-                }
-                authors.add(author);
-            }
-
-
+            Set<Author> authors = getAuthorsOrSaveNewAuthors(book, authorNames);
             book.setAuthors(authors);
 
 
@@ -135,8 +118,6 @@ public class BookController {
                 log.debug(item, x, y, name);
 
                 Location location = new Location(x, y, name, book);
-
-//                Location existingLocation = locationService.findAll().contains(location) ? locationService.findAll().stream().filter(l -> l.equals(location)).findFirst().get() : null;
                 boolean existsAlready = locationService.findAll().contains(location);
                 if (existsAlready) {
                     result.rejectValue("locations", "Locations", "Location already exists");
@@ -164,6 +145,26 @@ public class BookController {
             e.printStackTrace();
             throw new GenericException("Error in form", e.getMessage());
         }
+    }
+
+    private Set<Author> getAuthorsOrSaveNewAuthors(Book book, String[] authorNames) {
+        Set<Author> authors = new HashSet<>();
+        for (String authorName : authorNames) {
+            Author author = authorService.findByName(authorName);
+            if (author == null) {
+                author = new Author();
+                author.setName(authorName);
+                author.setBooks(new HashSet<>(List.of(book)));
+                authorService.save(author);
+            } else {
+
+//                    TODO:
+//                    authorService.addBookToAuthor(author, book);
+                authorService.save(author);
+            }
+            authors.add(author);
+        }
+        return authors;
     }
 
     @ExceptionHandler(GenericException.class)

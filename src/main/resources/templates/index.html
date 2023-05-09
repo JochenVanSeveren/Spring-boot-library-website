@@ -18,52 +18,52 @@
 <body>
 <div class="container">
 
-    <h1>Book Catalog</h1>
+    <h1 th:text="#{bookcatalog.title}">Book Catalog</h1>
 
     <div class="card">
         <div class="card-body">
 
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="book-search-label">Title:</span>
+                    <span class="input-group-text" id="book-search-label" th:text="#{bookcatalog.search.title}">Title:</span>
                 </div>
-                <input class="form-control mr-4" id="book-search" placeholder="Search book by title" type="text" aria-describedby="book-search-label">
+                <input class="form-control mr-4" id="book-search" th:placeholder="#{bookcatalog.search.title.placeholder}" type="text" aria-describedby="book-search-label">
 
                 <div class="input-group-prepend ml-4">
-                    <span class="input-group-text" id="author-search-label">Author:</span>
+                    <span class="input-group-text" id="author-search-label" th:text="#{bookcatalog.search.author}">Author:</span>
                 </div>
-                <input class="form-control" id="author-search" placeholder="Search book by author" type="text" aria-describedby="author-search-label">
+                <input class="form-control" id="author-search" th:placeholder="#{bookcatalog.search.author.placeholder}" type="text" aria-describedby="author-search-label">
             </div>
-
 
             <table class="table table-striped">
                 <thead>
                 <tr>
-                    <th>Cover</th>
-                    <th>Title</th>
-                    <th>Author(s)</th>
+                    <th th:text="#{bookcatalog.table.cover}">Cover</th>
+                    <th th:text="#{bookcatalog.table.title}">Title</th>
+                    <th th:text="#{bookcatalog.table.authors}">Author(s)</th>
                     <th></th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr th:each="book : ${books}">
-                    <td >
+                    <td>
                         <img th:src="@{'https://covers.openlibrary.org/b/isbn/' + ${book.isbn} + '-S.jpg'}" alt="Book cover" class="img-fluid" />
                     </td>
                     <td th:text="${book.title}"></td>
                     <td>
-                    <span th:each="author, iterStat : ${book.authors}"
-                          th:text="${author.name + (iterStat.last ? '' : ', ')}">
-                    </span>
+        <span th:each="author, iterStat : ${book.authors}"
+              th:text="${author.name + (iterStat.last ? '' : ', ')}">
+        </span>
                     </td>
                     <td>
-                        <a class="btn btn-info" th:href="@{'/bookDetails/' + ${book.isbn}}">View Details</a>
+                        <a class="btn btn-info" th:href="@{'/bookDetails/' + ${book.isbn}}" th:text="#{bookcatalog.table.viewdetails}">View Details</a>
                     </td>
                 </tr>
                 </tbody>
             </table>
-            <a class="btn btn-primary" href="#">Most Popular Books</a>
-            <a class="btn btn-success" href="/addBook" th:if="${user.role == 'admin'}">Add Book</a></div>
+            <a class="btn btn-primary" href="#" th:text="#{bookcatalog.button.mostpopular}">Most Popular Books</a>
+            <a class="btn btn-success" href="/addBook" th:if="${user.role == 'admin'}" th:text="#{bookcatalog.button.addbook}">Add Book</a></div>
+
     </div>
 
 </div>
