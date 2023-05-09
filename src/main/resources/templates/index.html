@@ -17,22 +17,26 @@
 </head>
 <body>
 <div class="container">
-
-    <h1 th:text="#{bookcatalog.title}">Book Catalog</h1>
+    <div class="banner">
+    <h1 th:text="#{bookcatalog.title}">Book Catalog</h1> </div>
 
     <div class="card">
         <div class="card-body">
 
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="book-search-label" th:text="#{bookcatalog.search.title}">Title:</span>
+                    <span class="input-group-text" id="book-search-label"
+                          th:text="#{bookcatalog.search.title}">Title:</span>
                 </div>
-                <input class="form-control mr-4" id="book-search" th:placeholder="#{bookcatalog.search.title.placeholder}" type="text" aria-describedby="book-search-label">
+                <input class="form-control mr-4" id="book-search"
+                       th:placeholder="#{bookcatalog.search.title.placeholder}" type="text"
+                       aria-describedby="book-search-label">
 
                 <div class="input-group-prepend ml-4">
                     <span class="input-group-text" id="author-search-label" th:text="#{bookcatalog.search.author}">Author:</span>
                 </div>
-                <input class="form-control" id="author-search" th:placeholder="#{bookcatalog.search.author.placeholder}" type="text" aria-describedby="author-search-label">
+                <input class="form-control" id="author-search" th:placeholder="#{bookcatalog.search.author.placeholder}"
+                       type="text" aria-describedby="author-search-label">
             </div>
 
             <table class="table table-striped">
@@ -47,7 +51,11 @@
                 <tbody>
                 <tr th:each="book : ${books}">
                     <td>
-                        <img th:src="@{'https://covers.openlibrary.org/b/isbn/' + ${book.isbn} + '-S.jpg'}" alt="Book cover" class="img-fluid" />
+                        <a th:href="@{'/bookDetails/' + ${book.isbn}}"
+                          ><img
+                                th:src="@{'https://covers.openlibrary.org/b/isbn/' + ${book.isbn} + '-S.jpg'}"
+                                alt="Book cover" class="img-fluid"/></a>
+
                     </td>
                     <td th:text="${book.title}"></td>
                     <td>
@@ -56,13 +64,15 @@
         </span>
                     </td>
                     <td>
-                        <a class="btn btn-info" th:href="@{'/bookDetails/' + ${book.isbn}}" th:text="#{bookcatalog.table.viewdetails}">View Details</a>
+                        <a class="btn btn-info" th:href="@{'/bookDetails/' + ${book.isbn}}"
+                           th:text="#{bookcatalog.table.viewdetails}">View Details</a>
                     </td>
                 </tr>
                 </tbody>
             </table>
             <a class="btn btn-primary" href="#" th:text="#{bookcatalog.button.mostpopular}">Most Popular Books</a>
-            <a class="btn btn-success" href="/addBook" th:if="${user.role == 'admin'}" th:text="#{bookcatalog.button.addbook}">Add Book</a></div>
+            <a class="btn btn-success" href="/addBook" th:if="${user.role == 'admin'}"
+               th:text="#{bookcatalog.button.addbook}">Add Book</a></div>
 
     </div>
 

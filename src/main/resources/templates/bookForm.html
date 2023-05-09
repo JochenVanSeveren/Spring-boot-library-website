@@ -24,7 +24,8 @@
 </head>
 <body>
 <div class="container">
-    <h1 th:text="#{addbook.title}"></h1>
+    <div class="banner">
+        <h1 th:text="#{addbook.title}"></h1></div>
     <div class="card">
         <div class="card-body">
             <form id="add-book-form" method="post" th:action="@{/addBook}" th:object="${book}">

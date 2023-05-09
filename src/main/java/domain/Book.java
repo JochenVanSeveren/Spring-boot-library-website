@@ -1,13 +1,13 @@
 package domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Range;
 import validation.ISBN;
 
 import java.io.Serializable;
@@ -35,9 +35,13 @@ public class Book implements Serializable {
     private Set<Author> authors = new HashSet<>();
     @ISBN
     private String isbn;
-    @Min(value = 1, message = "{book.price.min}")
-    @Max(value = 100, message = "{book.price.max}")
+
+    //    @Min(value = 1, message = "{book.price.min}")
+//    @Max(value = 50, message = "{book.price.max}")
+    @NotNull
+    @Range(min = 1, max = 50, message = "{book.price.range}")
     private double price;
+
     private int stars;
     @OneToMany(mappedBy = "books")
     private Set<Location> locations = new HashSet<>();
