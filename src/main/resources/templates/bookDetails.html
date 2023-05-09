@@ -28,7 +28,7 @@
     <div class="card">
         <div class="row">
             <div class="col-md-8">
-                <div class="card-body">
+                <div class="card-body" style="height: 100%;" >
                     <h4 class="card-title font-weight-bold" th:text="${book.title}"></h4>
                     <ul class="list-unstyled mb-4">
                         <li th:each="author : ${book.authors}" th:text="${author.name}"></li>
@@ -56,7 +56,7 @@
 
                         </form>
                     </div>
-                    <a class="btn btn-primary mt-3" th:href="@{/}" th:text="#{book.back_to_catalog}"></a>
+                    <a class="btn btn-primary mt-3" style="position: absolute; bottom: 10px;" th:href="@{/}" th:text="#{book.back_to_catalog}"></a>
                 </div>
             </div>
             <div class="col-md-4 d-flex align-items-start justify-content-center"
