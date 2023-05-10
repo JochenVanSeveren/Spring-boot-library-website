@@ -3,9 +3,8 @@ package domain;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.Pattern;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -13,13 +12,13 @@ import org.hibernate.validator.constraints.Range;
 import validation.PlaatscodeDifference;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @PlaatscodeDifference
+@EqualsAndHashCode(of = {"plaatscode1", "plaatscode2", "plaatsnaam"})
 public class Location implements Serializable {
 
     @Id
@@ -59,19 +58,6 @@ public class Location implements Serializable {
                 ", plaatsnaam='" + plaatsnaam + '\'' +
                 ", book=" + book.getTitle() +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Location location = (Location) o;
-        return plaatscode1 == location.plaatscode1 && plaatscode2 == location.plaatscode2 && Objects.equals(plaatsnaam, location.plaatsnaam);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(plaatscode1, plaatscode2, plaatsnaam);
     }
 
 }
