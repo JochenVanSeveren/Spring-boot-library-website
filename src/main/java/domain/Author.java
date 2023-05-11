@@ -36,6 +36,10 @@ public class Author implements Serializable {
     @Setter
     private Set<Book> books = new HashSet<>();
 
+    public Author(String name, Set<Book> books) {
+        this.name = name;
+        this.books = books;
+    }
 
     @Override
     public String toString() {

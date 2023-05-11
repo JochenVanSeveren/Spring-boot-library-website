@@ -34,25 +34,25 @@ public class InitDataConfig implements CommandLineRunner {
     @Override
     public void run(String... args) {
 
-        Author author1 = new Author(1L, "George Orwell", null);
-        Author author2 = new Author(2L, "Harper Lee", null);
-        Author author3 = new Author(3L, "J.D. Salinger", null);
-        Author author4 = new Author(4L, "F. Scott Fitzgerald", null);
-        Author author5 = new Author(5L, "J.K. Rowling", null);
-        Author author6 = new Author(6L, "J.R.R. Tolkien", null);
-        Author author7 = new Author(7L, "Jane Austen", null);
-        Author author8 = new Author(8L, "Gabriel Garcia Marquez", null);
-        Author author9 = new Author(9L, "Toni Morrison", null);
-        Author author10 = new Author(10L, "Stephen King", null);
-        Author author11 = new Author(11L, "Margaret Atwood", null);
-        Author author12 = new Author(12L, "Ernest Hemingway", null);
-        Author author13 = new Author(13L, "Mark Twain", null);
-        Author author15 = new Author(15L, "Charles Dickens", null);
-        Author author16 = new Author(16L, "Leo Tolstoy", null);
-        Author author17 = new Author(17L, "Victor Hugo", null);
-        Author author18 = new Author(18L, "Herman Melville", null);
-        Author author19 = new Author(19L, "Oscar Wilde", null);
-        Author author20 = new Author(20L, "Virginia Woolf", null);
+        Author author1 = new Author("George Orwell", null);
+        Author author2 = new Author("Harper Lee", null);
+        Author author3 = new Author("J.D. Salinger", null);
+        Author author4 = new Author("F. Scott Fitzgerald", null);
+        Author author5 = new Author("J.K. Rowling", null);
+        Author author6 = new Author("J.R.R. Tolkien", null);
+        Author author7 = new Author("Jane Austen", null);
+        Author author8 = new Author("Gabriel Garcia Marquez", null);
+        Author author9 = new Author("Toni Morrison", null);
+        Author author10 = new Author("Stephen King", null);
+        Author author11 = new Author("Margaret Atwood", null);
+        Author author12 = new Author("Ernest Hemingway", null);
+        Author author13 = new Author("Mark Twain", null);
+        Author author15 = new Author("Charles Dickens", null);
+        Author author16 = new Author("Leo Tolstoy", null);
+        Author author17 = new Author("Victor Hugo", null);
+        Author author18 = new Author("Herman Melville", null);
+        Author author19 = new Author("Oscar Wilde", null);
+        Author author20 = new Author("Virginia Woolf", null);
 
         Location location1 = new Location(50, 100, "A", null);
         Location location2 = new Location(200, 300, "B", null);
@@ -63,6 +63,9 @@ public class InitDataConfig implements CommandLineRunner {
         Location location7 = new Location(100, 300, "G", null);
         Location location8 = new Location(300, 100, "H", null);
         Location location9 = new Location(150, 250, "I", null);
+
+
+        authorRepository.saveAll(Arrays.asList(author1, author2, author3, author4, author5, author6, author7, author8, author9, author10, author11, author12, author13, author15, author16, author17, author18, author19, author20));
 
         Book book1 = new Book("1984", Set.of(author1, author2), "978-0-452-28423-4", 19.99, 4, Set.of(location1, location2));
         Book book2 = new Book("To Kill a Mockingbird", Set.of(author2), "978-0-06-093546-7", 24.99, 5, Set.of(location2));
@@ -89,6 +92,9 @@ public class InitDataConfig implements CommandLineRunner {
         User user3 = new User("user1", false, "Jochen", "123456789", null);
         User user4 = new User("user2", false, "user2", "123456789", null);
         User user5 = new User("user3", false, "user3", "123456789", null);
+
+        bookRepository.saveAll(Arrays.asList(book1, book2, book3, book4, book5, book6, book7, book8, book9, book10, book11, book12, book13, book14, book15, book16, book18, book19, book20));
+        locationRepository.saveAll(Arrays.asList(location1, location2, location3, location4, location5, location6, location7, location8, location9));
 
 
         author7.setBooks(Set.of(book7, book11));
@@ -135,13 +141,15 @@ public class InitDataConfig implements CommandLineRunner {
         location8.setBook(book15);
         location9.setBook(book16);
 
-        bookRepository.saveAll(Arrays.asList(book1, book2, book3, book4, book5, book6, book7, book8, book9, book10, book11, book12, book13, book14, book15, book16, book18, book19, book20));
 
         userRepository.saveAll(Arrays.asList(user1, user2, user3, user4, user5));
 
+        bookRepository.saveAll(Arrays.asList(book1, book2, book3, book4, book5, book6, book7, book8, book9, book10, book11, book12, book13, book14, book15, book16, book18, book19, book20));
         locationRepository.saveAll(Arrays.asList(location1, location2, location3, location4, location5, location6, location7, location8, location9));
-
         authorRepository.saveAll(Arrays.asList(author1, author2, author3, author4, author5, author6, author7, author8, author9, author10, author11, author12, author13, author15, author16, author17, author18, author19, author20));
+
+
+
 
     }
 
