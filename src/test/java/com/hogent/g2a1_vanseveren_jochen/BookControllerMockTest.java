@@ -11,15 +11,17 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
-import service.AuthorService;
-import service.BookService;
-import service.LocationService;
+import repository.AuthorRepository;
+import repository.BookRepository;
+import repository.LocationRepository;
+import repository.UserRepository;
 
 import java.util.HashSet;
 import java.util.Set;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 @Slf4j
@@ -28,21 +30,26 @@ public class BookControllerMockTest {
     private MockMvc mockMvc;
 
     @Mock
-    private BookService mockBookService;
+    private BookRepository mockBookRepository;
     @Mock
-    private AuthorService mockAuthorService;
+    private AuthorRepository mockAuthorRepository;
 
     @Mock
-    private LocationService mockLocationService;
+    private LocationRepository mockLocationRepository;
+
+    @Mock
+    private UserRepository mockUserRepository;
 
     @BeforeEach
     void before() {
         MockitoAnnotations.openMocks(this);
         BookController bookControllerUnderTest = new BookController();
         mockMvc = standaloneSetup(bookControllerUnderTest).build();
-        ReflectionTestUtils.setField(bookControllerUnderTest, "bookService", mockBookService);
-        ReflectionTestUtils.setField(bookControllerUnderTest, "authorService", mockAuthorService);
-        ReflectionTestUtils.setField(bookControllerUnderTest, "locationService", mockLocationService);
+        ReflectionTestUtils.setField(bookControllerUnderTest, "bookRepository", mockBookRepository);
+        ReflectionTestUtils.setField(bookControllerUnderTest, "authorRepository", mockAuthorRepository);
+        ReflectionTestUtils.setField(bookControllerUnderTest, "locationRepository", mockLocationRepository);
+        ReflectionTestUtils.setField(bookControllerUnderTest, "userRepository", mockUserRepository);
+//        ReflectionTestUtils.setField(bookControllerUnderTest, "globalAuthors", new HashSet<>());
     }
 
     @Test
@@ -52,10 +59,11 @@ public class BookControllerMockTest {
         Author expectedAuthor = new Author(1L, "Author", Set.of(expectedBook));
         expectedBook.setAuthors(Set.of(expectedAuthor));
         expectedBook.setLocations(Set.of(new Location(50, 100, "LOC", expectedBook)));
-        Mockito.when(mockBookService.findByIsbn("978-0-9936428-4-5"))
+        Mockito.when(mockBookRepository.findByIsbn("978-0-9936428-4-5"))
                 .then(invocation -> invocation.getMock().toString().contains("-> at ") ? expectedBook : null);
-        Mockito.when(mockAuthorService.findByName("Author")).thenReturn(expectedAuthor);
-        Mockito.when(mockLocationService.findAll()).thenReturn(new HashSet<>());
+        Mockito.when(mockAuthorRepository.findByName("Author")).thenReturn(expectedAuthor);
+        Mockito.when(mockLocationRepository.findAll()).thenReturn(new HashSet<>());
+//        Mockito.when(mockUserRepository.findByUsername("user")).thenReturn(new User("admin", false, "adminUser", "123456789", null));
 
 
         // Define authorNames and locationData
@@ -75,7 +83,6 @@ public class BookControllerMockTest {
                     }
                 })
                 .andExpect(redirectedUrl("/bookDetails/" + expectedBook.getIsbn()));
-
 
 
     }

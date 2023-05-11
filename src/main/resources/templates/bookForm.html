@@ -54,8 +54,8 @@
                         <input class="form-control" id="author-search" th:placeholder="#{addbook.placeholder.search}"
                                type="text">
                         <div class="input-group-append">
-                            <button class="btn btn-outline-secondary" type="button"
-                                    th:text="#{addbook.button.search}"></button>
+                            <button class="btn btn-outline-secondary" th:text="#{addbook.button.search}"
+                                    type="button"></button>
                         </div>
                     </div>
 
@@ -73,8 +73,9 @@
                         <label for="new-author"></label><input class="form-control" id="new-author"
                                                                th:placeholder="#{addbook.placeholder.new_author}"
                                                                type="text">
-                        <button class="btn btn-primary" style="width: 10rem" id="add-author-btn" type="button"
-                                th:text="#{addbook.button.add_author}"></button>
+                        <button class="btn btn-primary" id="add-author-btn" style="width: 10rem"
+                                th:text="#{addbook.button.add_author}"
+                                type="button"></button>
                     </div>
 
                 </div>
@@ -99,8 +100,8 @@
                     </div>
                     <p class="error" id="plaatscode-error"></p>
                     <p class="error" id="plaatsnaam-error"></p>
-                    <button class="btn btn-primary mt-2" id="add-location-btn" type="button"
-                            th:text="#{addbook.button.add_location}"></button>
+                    <button class="btn btn-primary mt-2" id="add-location-btn" th:text="#{addbook.button.add_location}"
+                            type="button"></button>
                     <input id="location-data" name="locationData" type="hidden">
                     <span class="error" th:errors="*{locations}" th:if="${#fields.hasErrors('locations')}"></span>
                     <p class="error" id="location-error"></p>
@@ -111,8 +112,8 @@
                 <div style="display: flex; justify-content: space-between;">
                     <div>
                         <a class="btn btn-danger mb-2" href="/" th:text="#{addbook.button.cancel}"></a>
-                        <button class="btn btn-primary mb-2" type="submit"
-                                th:text="#{addbook.button.add_book}"></button>
+                        <button class="btn btn-primary mb-2" th:text="#{addbook.button.add_book}"
+                                type="submit"></button>
                     </div>
                 </div>
 

@@ -1,14 +1,12 @@
 package domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -17,8 +15,11 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @EqualsAndHashCode(of = {"name"})
 public class Author implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Getter
@@ -26,25 +27,31 @@ public class Author implements Serializable {
     @NotNull
     private String name;
 
-    @ManyToMany(mappedBy = "authors")
+    @ManyToMany(cascade = CascadeType.PERSIST)
+    @JoinTable(
+            name = "book_authors",
+            joinColumns = @JoinColumn(name = "author_id"),
+            inverseJoinColumns = @JoinColumn(name = "book_id"))
     @Getter
     @Setter
     private Set<Book> books = new HashSet<>();
 
+
     @Override
     public String toString() {
-        String bookTitles;
-        if (books.isEmpty()) {
-            bookTitles = "No books";
+        return "Author{" +
+                "name='" + name + '\'' +
+                ", books=" + getBookTitles() +
+                '}';
+    }
+
+    public String getBookTitles() {
+        if (books == null || books.isEmpty()) {
+            return "No books";
         } else {
-            bookTitles = books.stream()
+            return books.stream()
                     .map(Book::getTitle)
                     .collect(Collectors.joining(", "));
         }
-
-        return "Author{" +
-                "name='" + name + '\'' +
-                ", books=" + bookTitles +
-                '}';
     }
 }

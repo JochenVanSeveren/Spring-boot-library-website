@@ -15,16 +15,13 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
-//import repository.BookRepository;
-import service.*;
 
 import java.util.Locale;
 import java.util.Properties;
 
 @SpringBootApplication
-//@EnableJpaRepositories(basePackages = {"repository"})
-//@EntityScan(basePackages = {"domain"})
-//@ComponentScan({"com.hogent.g2a1_vanseveren_jochen", "service", "domain", "exception", "repository", "config", "validation"})
+@EnableJpaRepositories(basePackages = {"repository"})
+@EntityScan(basePackages = {"domain"})
 @ComponentScans({
         @ComponentScan("service"),
         @ComponentScan("domain"),
@@ -39,26 +36,26 @@ public class G2A1VanSeverenJochenApplication implements WebMvcConfigurer {
         SpringApplication.run(G2A1VanSeverenJochenApplication.class, args);
     }
 
-    @Bean
-    BookService bookService() {
-        return new BookServiceImpl();
-    }
-
-    @Bean
-    AuthorService authorService() {
-        return new AuthorServiceImpl();
-    }
-
-    @Bean
-    LocationService locationService() {
-        return new LocationServiceImpl();
-    }
-
-
-    @Bean
-    public UserService userService() {
-        return new UserServiceImpl();
-    }
+//    @Bean
+//    BookService bookService() {
+//        return new BookServiceImpl();
+//    }
+//
+//    @Bean
+//    AuthorService authorService() {
+//        return new AuthorServiceImpl();
+//    }
+//
+//    @Bean
+//    LocationService locationService() {
+//        return new LocationServiceImpl();
+//    }
+//
+//
+//    @Bean
+//    public UserService userService() {
+//        return new UserServiceImpl();
+//    }
 
 //    @Bean
 //    public FavoritesService favoritesService() {
@@ -111,7 +108,6 @@ public class G2A1VanSeverenJochenApplication implements WebMvcConfigurer {
         interceptor.setParamName("lang");
         return interceptor;
     }
-
 
 
     @Override

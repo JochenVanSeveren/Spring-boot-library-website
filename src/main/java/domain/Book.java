@@ -7,6 +7,7 @@ import lombok.*;
 import org.hibernate.validator.constraints.Range;
 import validation.ISBN;
 
+import java.io.Serial;
 import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
@@ -20,31 +21,39 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @EqualsAndHashCode(of = {"isbn"})
 public class Book implements Serializable {
-
     public static final int MAX_AUTHORS = 3;
+    @Serial
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
     @NotBlank(message = "{book.title.notBlank}")
     private String title;
-    @ManyToMany
-    private Set<Author> authors = new HashSet<>();
+
+    @ManyToMany(mappedBy = "books", fetch = FetchType.EAGER)
+    private Set<Author> authors;
+
     @ISBN
+    @Getter
+    @Setter
+    @Column(unique = true)
     private String isbn;
 
-    //    @Min(value = 1, message = "{book.price.min}")
-//    @Max(value = 50, message = "{book.price.max}")
     @NotNull
     @Range(min = 1, max = 100, message = "{book.price.range}")
     private double price;
 
     private int stars;
-    @OneToMany(mappedBy = "books")
+
+    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Location> locations = new HashSet<>();
 
     @ManyToMany(mappedBy = "favoriteBooks")
     private Set<User> favoritedByUsers = new HashSet<>();
+
+    @ManyToMany(mappedBy = "favoriteBooks")
+    private Set<User> users = new HashSet<>();
+
 
     public Book(String title, Set<Author> authors, String isbn, double price, int stars, Set<Location> locations) {
         this.title = title;
@@ -59,7 +68,7 @@ public class Book implements Serializable {
     @Override
     public String toString() {
         String authorNames;
-        if (authors.isEmpty()) {
+        if (authors == null || authors.isEmpty()) {
             authorNames = "No authors";
         } else {
             authorNames = authors.stream()
@@ -67,7 +76,7 @@ public class Book implements Serializable {
                     .collect(Collectors.joining(", "));
         }
         String locationNames;
-        if (locations.isEmpty()) {
+        if (locations == null || locations.isEmpty()) {
             locationNames = "No locations";
         } else {
             locationNames = locations.stream()

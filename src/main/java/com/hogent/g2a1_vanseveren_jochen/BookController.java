@@ -14,9 +14,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import service.AuthorService;
-import service.BookService;
-import service.LocationService;
+import repository.AuthorRepository;
+import repository.BookRepository;
+import repository.LocationRepository;
+import repository.UserRepository;
 
 import java.util.HashSet;
 import java.util.List;
@@ -28,42 +29,47 @@ import java.util.Set;
 @ComponentScan({"com.hogent.g2a1_vanseveren_jochen", "service", "domain", "exception", "repository", "config", "validation"})
 public class BookController {
 
-    @Autowired
-    public BookService bookService;
 
     @Autowired
-    public AuthorService authorService;
+    public BookRepository bookRepository;
 
     @Autowired
-    public LocationService locationService;
+    public AuthorRepository authorRepository;
+
+
+    @Autowired
+    public LocationRepository locationRepository;
+
+    @Autowired
+    public UserRepository userRepository;
 
     @GetMapping("/")
     public String showBookCatalog(Model model) {
 //        model.addAttribute("books", bookRepository.findAll());
-        Set<Book> books = bookService.findAll();
+        Set<Book> books = bookRepository.findAll();
         model.addAttribute("books", books);
 //        TODO: replace the following line with the code to get the currently logged in user.
-        model.addAttribute("user", new User("admin", false));
+        model.addAttribute("user", new User("admin", false, "adminUser", "123456789", null));
 
         return "index";
     }
 
     @GetMapping("/mostPopularBooks")
     public String showMostPopularBooks(Model model) {
-        Set<Book> books = bookService.findMostPopularBooks();
+        Set<Book> books = bookRepository.findMostPopularBooks();
         model.addAttribute("books", books);
 //        TODO: replace the following line with the code to get the currently logged in user.
-        model.addAttribute("user", new User("admin", false));
+        model.addAttribute("user", new User("admin", false, "adminUser", "123456789", null));
 
         return "index";
     }
 
     @GetMapping("/bookDetails/{isbn}")
     public String showBookDetails(@PathVariable("isbn") String isbn, Model model) {
-        Book book = bookService.findByIsbn(isbn);
+        Book book = bookRepository.findByIsbn(isbn);
         model.addAttribute("book", book);
 //        TODO: replace the following line with the code to get the currently logged in user.
-        model.addAttribute("user", new User("admin", false));
+        model.addAttribute("user", new User("admin", false, "adminUser", "123456789", null));
 
         return "bookDetails";
     }
@@ -72,7 +78,7 @@ public class BookController {
     public String showAddBook(Model model) {
 
         Book book = new Book();
-        Set<Author> globalAuthors = authorService.findAll();
+        Set<Author> globalAuthors = authorRepository.findAll();
 
         model.addAttribute("book", book);
         model.addAttribute("globalAuthors", globalAuthors);
@@ -88,7 +94,7 @@ public class BookController {
             , @RequestParam("locationData") String locationData
     ) {
         try {
-            if (bookService.findByIsbn(book.getIsbn()) != null) {
+            if (bookRepository.findByIsbn(book.getIsbn()) != null) {
                 result.rejectValue("isbn", "Duplicate.book.isbn", "This ISBN already exists");
             }
             if (authorNames.length > Book.MAX_AUTHORS || authorNames.length < 1) {
@@ -100,7 +106,7 @@ public class BookController {
             if (result.hasErrors()) {
                 log.error("Errors in form");
                 log.error(result.toString());
-                Set<Author> globalAuthors = authorService.findAll();
+                Set<Author> globalAuthors = authorRepository.findAll();
                 model.addAttribute("globalAuthors", globalAuthors);
                 return "bookForm";
             }
@@ -128,15 +134,15 @@ public class BookController {
                 log.debug(item, x, y, name);
 
                 Location location = new Location(x, y, name, book);
-                boolean existsAlready = locationService.findAll().contains(location);
+                boolean existsAlready = locationRepository.findAll().contains(location);
                 if (existsAlready) {
                     result.rejectValue("locations", "Locations", "Location already exists");
                     log.error("Errors in form, location already exists");
                     log.error(result.toString());
-                    Set<Author> globalAuthors = authorService.findAll();
+                    Set<Author> globalAuthors = authorRepository.findAll();
                     model.addAttribute("globalAuthors", globalAuthors);
                     return "bookForm";
-                } else locationService.save(location);
+                } else locationRepository.save(location);
 
 
                 locations.add(location);
@@ -144,11 +150,11 @@ public class BookController {
 
             book.setLocations(locations);
 
-            locations.forEach(location -> locationService.save(location));
+            locationRepository.saveAll(locations);
 
             log.info(book.toString());
 
-            bookService.save(book);
+            bookRepository.save(book);
 
             return "redirect:/bookDetails/" + book.getIsbn();
         } catch (Exception e) {
@@ -160,17 +166,17 @@ public class BookController {
     private Set<Author> getAuthorsOrSaveNewAuthors(Book book, String[] authorNames) {
         Set<Author> authors = new HashSet<>();
         for (String authorName : authorNames) {
-            Author author = authorService.findByName(authorName);
+            Author author = authorRepository.findByName(authorName);
             if (author == null) {
                 author = new Author();
                 author.setName(authorName);
                 author.setBooks(new HashSet<>(List.of(book)));
-                authorService.save(author);
+                authorRepository.save(author);
             } else {
 
 //                    TODO:
 //                    authorService.addBookToAuthor(author, book);
-                authorService.save(author);
+                authorRepository.save(author);
             }
             authors.add(author);
         }

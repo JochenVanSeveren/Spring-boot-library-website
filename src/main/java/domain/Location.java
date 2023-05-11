@@ -1,8 +1,6 @@
 package domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -11,6 +9,7 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.Range;
 import validation.PlaatscodeDifference;
 
+import java.io.Serial;
 import java.io.Serializable;
 
 @Entity
@@ -20,8 +19,11 @@ import java.io.Serializable;
 @PlaatscodeDifference
 @EqualsAndHashCode(of = {"plaatscode1", "plaatscode2", "plaatsnaam"})
 public class Location implements Serializable {
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Range(min = 50, max = 300, message = "{plaatscode1.range}")
@@ -33,7 +35,9 @@ public class Location implements Serializable {
     @Pattern(regexp = "^[a-zA-Z]+$", message = "plaatsnaam should only contain letters")
     private String plaatsnaam;
 
+
     @ManyToOne
+    @JoinColumn(name = "book_id")
     private Book book;
 
 

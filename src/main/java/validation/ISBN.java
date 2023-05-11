@@ -12,6 +12,7 @@ import java.lang.annotation.*;
 public @interface ISBN {
 
     String message() default "{isbn.error}";
+
     Class<?>[] groups() default {};
 
     Class<? extends Payload>[] payload() default {};
