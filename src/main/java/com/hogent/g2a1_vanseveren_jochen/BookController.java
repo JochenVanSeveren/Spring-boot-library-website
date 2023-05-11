@@ -115,7 +115,6 @@ public class BookController {
             Set<Author> authors = getAuthorsOrSaveNewAuthors(book, authorNames);
             book.setAuthors(authors);
 
-
             Set<Location> locations = new HashSet<>();
 
             log.debug("locationData" + locationData);
@@ -133,7 +132,10 @@ public class BookController {
 
                 log.debug(item, x, y, name);
 
-                Location location = new Location(x, y, name, book);
+//                Location location  = locationRepository.findByPlaatscode1Plaatscode2Plaatsnaam(x, y, name);
+
+
+                Location location = new Location(x, y, name, null);
                 boolean existsAlready = locationRepository.findAll().contains(location);
                 if (existsAlready) {
                     result.rejectValue("locations", "Locations", "Location already exists");
@@ -142,20 +144,33 @@ public class BookController {
                     Set<Author> globalAuthors = authorRepository.findAll();
                     model.addAttribute("globalAuthors", globalAuthors);
                     return "bookForm";
-                } else locationRepository.save(location);
+                }
+//                else locationRepository.save(location);
 
 
                 locations.add(location);
             }
 
-            book.setLocations(locations);
 
-            locationRepository.saveAll(locations);
+//            locationRepository.saveAll(locations);
+
+            book.setLocations(locations);
 
             log.info(book.toString());
 
             bookRepository.save(book);
 
+            locations.forEach(location -> {
+                location.setBook(book);
+                locationRepository.save(location);
+            });
+
+            authors.forEach(author -> {
+                Set<Book> books = new HashSet<>(author.getBooks());
+                books.add(book);
+                author.setBooks(books);
+                authorRepository.save(author);
+            });
             return "redirect:/bookDetails/" + book.getIsbn();
         } catch (Exception e) {
             e.printStackTrace();
@@ -171,12 +186,6 @@ public class BookController {
                 author = new Author();
                 author.setName(authorName);
                 author.setBooks(new HashSet<>(List.of(book)));
-                authorRepository.save(author);
-            } else {
-
-//                    TODO:
-//                    authorService.addBookToAuthor(author, book);
-                authorRepository.save(author);
             }
             authors.add(author);
         }

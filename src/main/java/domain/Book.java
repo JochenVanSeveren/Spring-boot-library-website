@@ -45,7 +45,7 @@ public class Book implements Serializable {
 
     private int stars;
 
-    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private Set<Location> locations = new HashSet<>();
 
     @ManyToMany(mappedBy = "favoriteBooks")
