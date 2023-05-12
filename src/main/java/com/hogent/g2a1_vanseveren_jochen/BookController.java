@@ -108,7 +108,6 @@ public class BookController {
     }
 
 
-
     @PostMapping("/addBook")
     public String submitAddBook(
             @Valid
@@ -120,7 +119,8 @@ public class BookController {
         try {
             String isbn = book.getIsbn();
 
-            if (isNew && bookRepository.findByIsbn(isbn).isPresent()) {
+            Optional<Book> existingBook = bookRepository.findByIsbn(book.getIsbn());
+            if (isNew && existingBook.isPresent()) {
                 result.rejectValue("isbn", "Duplicate.book.isbn", "This ISBN already exists");
             }
             if (authorNames.length > Book.MAX_AUTHORS || authorNames.length < 1) {
@@ -177,9 +177,28 @@ public class BookController {
 
             log.info(book.toString());
 
-            Optional<Book> existingBook = bookRepository.findByIsbn(book.getIsbn());
             if (existingBook.isPresent()) {
                 Book bookToUpdate = existingBook.get();
+
+                if (!isNew) {
+                    log.debug("Removing checks for locations and authors");
+                    locations.forEach(location -> {
+                        if (!bookToUpdate.getLocations().contains(location)) {
+                            log.debug("Removing location: " + location);
+                            locationRepository.delete(location);
+                        }
+                    });
+
+                    book.getAuthors().forEach(author -> {
+                        if (!authors.contains(author)) {
+                            Set<Book> books = new HashSet<>(author.getBooks());
+                            books.remove(bookToUpdate);
+                            author.setBooks(books);
+                            authorRepository.save(author);
+                        }
+                    });
+                }
+
 
                 // Update the fields of bookToUpdate using the values from book
                 bookToUpdate.setTitle(book.getTitle());
@@ -235,6 +254,9 @@ public class BookController {
 //        TODO: replace with current user
         User user = userRepository.findByUsername("adminUser");
         Optional<Book> book = bookRepository.findByIsbn(isbn);
+        if (book.isEmpty()) {
+            throw new GenericException("Book not found: ", isbn);
+        }
         if (user.getFavoriteBooks().contains(book.get())) {
             user.getFavoriteBooks().remove(book.get());
         } else {
