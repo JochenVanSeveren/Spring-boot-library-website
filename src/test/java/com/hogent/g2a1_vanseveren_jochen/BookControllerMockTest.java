@@ -3,6 +3,7 @@ package com.hogent.g2a1_vanseveren_jochen;
 import domain.Author;
 import domain.Book;
 import domain.Location;
+import domain.User;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,6 +20,9 @@ import repository.UserRepository;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -86,6 +90,38 @@ public class BookControllerMockTest {
 
 
     }
+
+    @Test
+    void toggleFavorite() throws Exception {
+        // Arrange
+        User user = new User();
+        user.setUsername("adminUser");
+        Book book = new Book();
+        book.setIsbn("978-0-9936428-4-5");
+        user.getFavoriteBooks().add(book);
+        Mockito.when(mockUserRepository.findByUsername("adminUser")).thenReturn(user);
+        Mockito.when(mockBookRepository.findByIsbn("978-0-9936428-4-5")).thenReturn(book);
+
+        // Act & Assert
+        mockMvc.perform(post("/toggleFavorite")
+                        .param("bookIsbn", "978-0-9936428-4-5"))
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/bookDetails/978-0-9936428-4-5"))
+                .andDo(mvcResult -> {
+                    // Check if the book was removed from favorites
+                    assertTrue(user.getFavoriteBooks().isEmpty());
+                    // Check if the book was added to favorites
+                    mockMvc.perform(post("/toggleFavorite")
+                                    .param("bookIsbn", "978-0-9936428-4-5"))
+                            .andExpect(status().isFound())
+                            .andExpect(redirectedUrl("/bookDetails/978-0-9936428-4-5"))
+                            .andDo(innerMvcResult -> {
+                                // Check if the book was added to favorites
+                                assertTrue(user.getFavoriteBooks().contains(book));
+                            });
+                });
+    }
+
 
 
 }

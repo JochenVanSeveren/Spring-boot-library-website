@@ -23,7 +23,20 @@ class BookControllerTest {
         mockMvc.perform(get("/"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("index"))
+                .andExpect(model().attributeExists("title"))
                 .andExpect(model().attributeExists("books"))
+                .andExpect(model().attributeExists("isPopularBookCatalog"))
+                .andExpect(model().attributeExists("user"));
+    }
+
+    @Test
+    void showMostPopularBooks() throws Exception {
+        mockMvc.perform(get("/mostPopularBooks"))
+                .andExpect(status().isOk())
+                .andExpect(view().name("index"))
+                .andExpect(model().attributeExists("title"))
+                .andExpect(model().attributeExists("books"))
+                .andExpect(model().attributeExists("isPopularBookCatalog"))
                 .andExpect(model().attributeExists("user"));
     }
 
@@ -32,6 +45,8 @@ class BookControllerTest {
         mockMvc.perform(get("/bookDetails/978-0-618-00222-1"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("bookDetails"))
+                .andExpect(model().attributeExists("isFavorite"))
+                .andExpect(model().attributeExists("userFavoriteLimiteReached"))
                 .andExpect(model().attributeExists("book"))
                 .andExpect(model().attributeExists("user"));
     }
