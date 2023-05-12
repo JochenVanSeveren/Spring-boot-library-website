@@ -42,6 +42,7 @@
             <table class="table table-striped">
                 <thead>
                 <tr>
+                    <th>&#9733;</th>
                     <th th:text="#{bookcatalog.table.cover}">Cover</th>
                     <th th:text="#{bookcatalog.table.title}">Title</th>
                     <th th:text="#{bookcatalog.table.authors}">Author(s)</th>
@@ -50,6 +51,7 @@
                 </thead>
                 <tbody>
                 <tr th:each="book : ${books}">
+                    <td th:text="${book.stars}"></td>
                     <td>
                         <a th:href="@{'/bookDetails/' + ${book.isbn}}"
                         ><img
@@ -71,6 +73,7 @@
                 </tr>
                 </tbody>
             </table>
+
 
             <a class="btn btn-primary" th:if="${isPopularBookCatalog}" href="/" th:text="#{book.back_to_catalog}">Back
                 to Catalog</a>
