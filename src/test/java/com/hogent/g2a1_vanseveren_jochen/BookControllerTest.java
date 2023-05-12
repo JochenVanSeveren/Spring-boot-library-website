@@ -20,9 +20,9 @@ class BookControllerTest {
 
     @Test
     void showBookCatalog() throws Exception {
-        mockMvc.perform(get("/"))
+        mockMvc.perform(get("/books"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("index"))
+                .andExpect(view().name("books"))
                 .andExpect(model().attributeExists("title"))
                 .andExpect(model().attributeExists("books"))
                 .andExpect(model().attributeExists("isPopularBookCatalog"))
@@ -33,7 +33,7 @@ class BookControllerTest {
     void showMostPopularBooks() throws Exception {
         mockMvc.perform(get("/mostPopularBooks"))
                 .andExpect(status().isOk())
-                .andExpect(view().name("index"))
+                .andExpect(view().name("books"))
                 .andExpect(model().attributeExists("title"))
                 .andExpect(model().attributeExists("books"))
                 .andExpect(model().attributeExists("isPopularBookCatalog"))

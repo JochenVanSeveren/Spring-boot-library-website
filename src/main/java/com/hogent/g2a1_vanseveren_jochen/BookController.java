@@ -44,7 +44,7 @@ public class BookController {
     @Autowired
     public UserRepository userRepository;
 
-    @GetMapping("/")
+    @GetMapping("/books")
     public String showBookCatalog(Model model) {
         Set<Book> books = bookRepository.findAll();
         User user = userRepository.findByUsername("adminUser");
@@ -54,7 +54,7 @@ public class BookController {
         model.addAttribute("isPopularBookCatalog", false);
 //        TODO: replace the following line with the code to get the currently logged in user.
         model.addAttribute("user", user);
-        return "index";
+        return "books";
     }
 
     @GetMapping("/mostPopularBooks")
@@ -67,7 +67,7 @@ public class BookController {
 //        TODO: replace the following line with the code to get the currently logged in user.
         model.addAttribute("user", user);
 
-        return "index";
+        return "books";
     }
 
     @GetMapping("/bookDetails/{isbn}")
