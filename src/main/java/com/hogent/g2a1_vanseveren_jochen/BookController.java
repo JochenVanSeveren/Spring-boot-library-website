@@ -175,45 +175,41 @@ public class BookController {
 
             book.setLocations(locations);
 
-            log.info(book.toString());
-
             if (existingBook.isPresent()) {
                 Book bookToUpdate = existingBook.get();
 
                 if (!isNew) {
-                    log.debug("Removing checks for locations and authors");
-                    locations.forEach(location -> {
-                        if (!bookToUpdate.getLocations().contains(location)) {
-                            log.debug("Removing location: " + location);
-                            locationRepository.delete(location);
-                        }
-                    });
+                    log.debug("Removing locations and authors that are no longer used");
 
-                    book.getAuthors().forEach(author -> {
-                        if (!authors.contains(author)) {
-                            Set<Book> books = new HashSet<>(author.getBooks());
-                            books.remove(bookToUpdate);
-                            author.setBooks(books);
-                            authorRepository.save(author);
-                        }
-                    });
+                    Set<Location> oldLocations = new HashSet<>(bookToUpdate.getLocations());
+                    oldLocations.removeAll(locations);
+                    for (Location location : oldLocations) {
+                        log.debug("Removing location: " + location);
+                        bookToUpdate.removeLocation(location);
+                        locationRepository.delete(location);
+                    }
+
+                    Set<Author> oldAuthors = new HashSet<>(bookToUpdate.getAuthors());
+                    oldAuthors.removeAll(authors);
+                    for (Author author : oldAuthors) {
+                        Set<Book> books = new HashSet<>(author.getBooks());
+                        books.remove(bookToUpdate);
+                        author.setBooks(books);
+                        authorRepository.save(author);
+                    }
                 }
 
-
-                // Update the fields of bookToUpdate using the values from book
                 bookToUpdate.setTitle(book.getTitle());
-                bookToUpdate.setAuthors(book.getAuthors());
-                bookToUpdate.setPrice(book.getPrice());
-                bookToUpdate.setLocations(book.getLocations());
-                // ... and so on for each field you want to update
+
+                // Set new sets of locations and authors
+                bookToUpdate.setAuthors(new HashSet<>(authors));
+                bookToUpdate.setLocations(new HashSet<>(locations));
 
                 book = bookRepository.save(bookToUpdate);
             } else {
-                // The book doesn't exist, so save it as a new book
                 book = bookRepository.save(book);
             }
 
-// Now that the book has been saved, you can save the locations and authors
             @Valid Book finalBook = book;
             locations.forEach(location -> {
                 location.setBook(finalBook);
@@ -227,6 +223,8 @@ public class BookController {
                 author.setBooks(books);
                 authorRepository.save(author);
             });
+
+            log.info("Saved book: " + book);
 
             return "redirect:/bookDetails/" + isbn;
         } catch (Exception e) {

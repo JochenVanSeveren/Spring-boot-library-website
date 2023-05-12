@@ -97,4 +97,8 @@ public class Book implements Serializable {
                 '}';
     }
 
+    public void removeLocation(Location location) {
+        locations.remove(location);
+        location.setBook(null);
+    }
 }
