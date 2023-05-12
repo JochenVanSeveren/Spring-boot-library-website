@@ -9,6 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -35,32 +36,6 @@ public class G2A1VanSeverenJochenApplication implements WebMvcConfigurer {
     public static void main(String[] args) {
         SpringApplication.run(G2A1VanSeverenJochenApplication.class, args);
     }
-
-//    @Bean
-//    BookService bookService() {
-//        return new BookServiceImpl();
-//    }
-//
-//    @Bean
-//    AuthorService authorService() {
-//        return new AuthorServiceImpl();
-//    }
-//
-//    @Bean
-//    LocationService locationService() {
-//        return new LocationServiceImpl();
-//    }
-//
-//
-//    @Bean
-//    public UserService userService() {
-//        return new UserServiceImpl();
-//    }
-
-//    @Bean
-//    public FavoritesService favoritesService() {
-//        return new FavoritesServiceImpl();
-//    }
 
 //        @Bean
 //        public LocaleResolver localeResolver() {
@@ -114,6 +89,7 @@ public class G2A1VanSeverenJochenApplication implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(localeChangeInterceptor());
     }
+
 
 
 }
