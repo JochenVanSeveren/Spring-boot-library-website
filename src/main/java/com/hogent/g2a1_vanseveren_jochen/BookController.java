@@ -74,6 +74,7 @@ public class BookController {
         Book book = bookRepository.findByIsbn(isbn);
         User user = userRepository.findByUsername("adminUser");
         model.addAttribute("isFavorite", user.getFavoriteBooks().contains(book));
+        model.addAttribute("userFavoriteLimiteReached", user.getFavoriteBooks().size() >= user.getFavoriteLimit());
         model.addAttribute("book", book);
 //        TODO: replace the following line with the code to get the currently logged in user.
         model.addAttribute("user", user);

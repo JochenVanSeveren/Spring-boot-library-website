@@ -28,39 +28,41 @@
     <div class="card">
         <div class="row">
             <div class="col-md-8">
-                <div class="card-body" style="height: 100%;">
-                    <h4 class="card-title font-weight-bold" th:text="${book.title}"></h4>
-                    <ul class="list-unstyled mb-4">
-                        <li th:each="author : ${book.authors}" th:text="${author.name}"></li>
-                    </ul>
-                    <p class="card-text">
-                        <strong th:text="#{book.isbn}"></strong>: <span th:text="${book.isbn}"></span><br>
-                        <strong th:text="#{book.price}"></strong>: <span
-                            th:text="${#numbers.formatDecimal(book.price, 1, 2)}"></span>
-                        €<br>
-                        <strong th:text="#{book.stars}"></strong>: <span th:text="${book.stars}"></span><br>
-                        <strong th:text="#{book.locations}"></strong>:
-                    </p>
-                    <ul class="list-group mb-4">
-                        <li class="list-group-item" th:each="location : ${book.locations}">
-                            <span class="font-weight-bold" th:text="${location.plaatsnaam}"></span>
-                            <span class="ml-3" th:text="${location.plaatscode1}"></span>
-                            <span class="ml-3" th:text="${location.plaatscode2}"></span>
-                        </li>
-                    </ul>
+                <div class="card-body">
+                    <div style="margin-bottom: 6rem;">
+                        <h4 class="card-title font-weight-bold" th:text="${book.title}"></h4>
+                        <ul class="list-unstyled mb-4">
+                            <li th:each="author : ${book.authors}" th:text="${author.name}"></li>
+                        </ul>
+                        <p class="card-text">
+                            <strong th:text="#{book.isbn}"></strong>: <span th:text="${book.isbn}"></span><br>
+                            <strong th:text="#{book.price}"></strong>: <span
+                                th:text="${#numbers.formatDecimal(book.price, 1, 2)}"></span>
+                            €<br>
+                            <strong th:text="#{book.stars}"></strong>: <span th:text="${book.stars}"></span><br>
+                            <strong th:text="#{book.locations}"></strong>:
+                        </p>
+                        <ul class="list-group mb-5">
+                            <li class="list-group-item" th:each="location : ${book.locations}">
+                                <span class="font-weight-bold" th:text="${location.plaatsnaam}"></span>
+                                <span class="ml-3" th:text="${location.plaatscode1}"></span>
+                                <span class="ml-3" th:text="${location.plaatscode2}"></span>
+                            </li>
+                        </ul>
+                    </div>
 
-                    <form method="post" th:action="@{/toggleFavorite}">
+                    <form method="post" th:action="@{/toggleFavorite}"
+                          style="position: absolute; bottom: 10px;">
+                        <p th:if="${userFavoriteLimiteReached}" th:text="#{user.favorite_limit_reached}"></p>
+                        <a class="btn btn-primary mt-3" style="" th:href="@{/}"
+                           th:text="#{book.back_to_catalog}"></a>
                         <input th:name="bookIsbn" th:value="${book.isbn}" type="hidden">
-                        <button type="submit" class="btn btn-primary"
-                                th:if="${!isFavorite && user.getFavoriteBooks().size() < user.getFavoriteLimit()}"
+                        <button type="submit" class="btn btn-primary mt-3"
+                                th:if="${!isFavorite && !userFavoriteLimiteReached}"
                                 th:text="#{book.add_to_favorites}"></button>
-                        <button type="submit" class="btn btn-danger" th:if="${isFavorite}"
+                        <button type="submit" class="btn btn-danger mt-3" th:if="${isFavorite}"
                                 th:text="#{book.remove_from_favorites}"></button>
-
                     </form>
-
-                    <a class="btn btn-primary mt-3" style="position: absolute; bottom: 10px;" th:href="@{/}"
-                       th:text="#{book.back_to_catalog}"></a>
                 </div>
             </div>
             <div class="col-md-4 d-flex align-items-start justify-content-center"
