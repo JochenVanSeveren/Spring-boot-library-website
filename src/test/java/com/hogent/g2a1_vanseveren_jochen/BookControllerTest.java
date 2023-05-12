@@ -54,7 +54,7 @@ class BookControllerTest {
     @Test
     @Transactional
     void showAddBook() throws Exception {
-        mockMvc.perform(get("/addBook"))
+        mockMvc.perform(get("/addBook/new"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("bookForm"))
                 .andExpect(model().attributeExists("book"))

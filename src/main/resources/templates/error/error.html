@@ -11,7 +11,7 @@
     <div class="card">
         <div class="card-body" style="background-color: #f8d7da">
 
-            <h1 th:if="${errCode}" th:text="|${errCode} : System Errors|"></h1>
+            <h1 class="text-danger display-4" th:if="${errCode}" th:text="|${errCode} : System Errors|"></h1>
             <h1 class="text-danger display-4" th:text="#{error.message.something_went_wrong}" th:unless="${errCode}">
                 Something went wrong</h1>
             <h4 th:if="${errMsg}" th:text="${errMsg}"></h4>

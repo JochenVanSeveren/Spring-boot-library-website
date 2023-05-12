@@ -17,6 +17,8 @@
 
 
     </style>
+    <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+
 </head>
 <body>
 <div class="container">
@@ -62,6 +64,8 @@
                                 th:text="#{book.add_to_favorites}"></button>
                         <button type="submit" class="btn btn-danger mt-3" th:if="${isFavorite}"
                                 th:text="#{book.remove_from_favorites}"></button>
+                        <a class="btn btn-success mt-3" th:href="@{'/addBook/' + ${book.isbn}}"><i class='far fa-edit'></i></a>
+
                     </form>
                 </div>
             </div>

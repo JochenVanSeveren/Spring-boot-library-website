@@ -21,6 +21,7 @@ import repository.UserRepository;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 
@@ -71,27 +72,42 @@ public class BookController {
 
     @GetMapping("/bookDetails/{isbn}")
     public String showBookDetails(@PathVariable("isbn") String isbn, Model model) {
-        Book book = bookRepository.findByIsbn(isbn);
+        Optional<Book> book = bookRepository.findByIsbn(isbn);
+        if (book.isEmpty()) {
+            throw new GenericException("Book not found: ", isbn);
+        }
         User user = userRepository.findByUsername("adminUser");
-        model.addAttribute("isFavorite", user.getFavoriteBooks().contains(book));
+        model.addAttribute("isFavorite", user.getFavoriteBooks().contains(book.get()));
         model.addAttribute("userFavoriteLimiteReached", user.getFavoriteBooks().size() >= user.getFavoriteLimit());
-        model.addAttribute("book", book);
+        model.addAttribute("book", book.get());
 //        TODO: replace the following line with the code to get the currently logged in user.
         model.addAttribute("user", user);
         return "bookDetails";
     }
 
-    @GetMapping("/addBook")
-    public String showAddBook(Model model) {
-
-        Book book = new Book();
+    @GetMapping("/addBook/{isbn}")
+    public String showAddBook(@PathVariable String isbn, Model model) {
+        Optional<Book> book;
+        if (isbn.equals("new")) {
+            model.addAttribute("isNew", true);
+            book = Optional.of(new Book());
+        } else {
+            book = bookRepository.findByIsbn(isbn);
+            if (book.isEmpty()) {
+                throw new GenericException("Book not found: ", isbn);
+            } else {
+                model.addAttribute("isNew", false);
+            }
+        }
         Set<Author> globalAuthors = authorRepository.findAll();
 
-        model.addAttribute("book", book);
+        model.addAttribute("book", book.get());
         model.addAttribute("globalAuthors", globalAuthors);
 
         return "bookForm";
     }
+
+
 
     @PostMapping("/addBook")
     public String submitAddBook(
@@ -99,9 +115,12 @@ public class BookController {
             @ModelAttribute("book") Book book, BindingResult result, Model model,
             @RequestParam("authorNames") String[] authorNames
             , @RequestParam("locationData") String locationData
+            , @RequestParam("isNew") boolean isNew
     ) {
         try {
-            if (bookRepository.findByIsbn(book.getIsbn()) != null) {
+            String isbn = book.getIsbn();
+
+            if (isNew && bookRepository.findByIsbn(isbn).isPresent()) {
                 result.rejectValue("isbn", "Duplicate.book.isbn", "This ISBN already exists");
             }
             if (authorNames.length > Book.MAX_AUTHORS || authorNames.length < 1) {
@@ -139,46 +158,58 @@ public class BookController {
 
                 log.debug(item, x, y, name);
 
-//                Location location  = locationRepository.findByPlaatscode1Plaatscode2Plaatsnaam(x, y, name);
-
-
                 Location location = new Location(x, y, name, null);
-                boolean existsAlready = locationRepository.findAll().contains(location);
-                if (existsAlready) {
-                    result.rejectValue("locations", "Locations", "Location already exists");
-                    log.error("Errors in form, location already exists");
-                    log.error(result.toString());
-                    Set<Author> globalAuthors = authorRepository.findAll();
-                    model.addAttribute("globalAuthors", globalAuthors);
-                    return "bookForm";
+                if (isNew) {
+                    boolean existsAlready = locationRepository.findAll().contains(location);
+                    if (existsAlready) {
+                        result.rejectValue("locations", "Locations", "Location already exists");
+                        log.error("Errors in form, location already exists");
+                        log.error(result.toString());
+                        Set<Author> globalAuthors = authorRepository.findAll();
+                        model.addAttribute("globalAuthors", globalAuthors);
+                        return "bookForm";
+                    }
                 }
-//                else locationRepository.save(location);
-
-
                 locations.add(location);
             }
-
-
-//            locationRepository.saveAll(locations);
 
             book.setLocations(locations);
 
             log.info(book.toString());
 
-            bookRepository.save(book);
+            Optional<Book> existingBook = bookRepository.findByIsbn(book.getIsbn());
+            if (existingBook.isPresent()) {
+                Book bookToUpdate = existingBook.get();
 
+                // Update the fields of bookToUpdate using the values from book
+                bookToUpdate.setTitle(book.getTitle());
+                bookToUpdate.setAuthors(book.getAuthors());
+                bookToUpdate.setPrice(book.getPrice());
+                bookToUpdate.setLocations(book.getLocations());
+                // ... and so on for each field you want to update
+
+                book = bookRepository.save(bookToUpdate);
+            } else {
+                // The book doesn't exist, so save it as a new book
+                book = bookRepository.save(book);
+            }
+
+// Now that the book has been saved, you can save the locations and authors
+            @Valid Book finalBook = book;
             locations.forEach(location -> {
-                location.setBook(book);
+                location.setBook(finalBook);
                 locationRepository.save(location);
             });
 
+            @Valid Book finalBook1 = book;
             authors.forEach(author -> {
                 Set<Book> books = new HashSet<>(author.getBooks());
-                books.add(book);
+                books.add(finalBook1);
                 author.setBooks(books);
                 authorRepository.save(author);
             });
-            return "redirect:/bookDetails/" + book.getIsbn();
+
+            return "redirect:/bookDetails/" + isbn;
         } catch (Exception e) {
             e.printStackTrace();
             throw new GenericException("Error in form", e.getMessage());
@@ -203,11 +234,11 @@ public class BookController {
     public String toggleFavorite(@RequestParam("bookIsbn") String isbn, Model model) {
 //        TODO: replace with current user
         User user = userRepository.findByUsername("adminUser");
-        Book book = bookRepository.findByIsbn(isbn);
-        if (user.getFavoriteBooks().contains(book)) {
-            user.getFavoriteBooks().remove(book);
+        Optional<Book> book = bookRepository.findByIsbn(isbn);
+        if (user.getFavoriteBooks().contains(book.get())) {
+            user.getFavoriteBooks().remove(book.get());
         } else {
-            user.getFavoriteBooks().add(book);
+            user.getFavoriteBooks().add(book.get());
         }
         userRepository.save(user);
         return "redirect:/bookDetails/" + isbn;

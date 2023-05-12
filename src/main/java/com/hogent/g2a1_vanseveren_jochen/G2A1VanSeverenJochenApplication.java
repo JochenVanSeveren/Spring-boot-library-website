@@ -1,5 +1,6 @@
 package com.hogent.g2a1_vanseveren_jochen;
 
+import exception.GenericException;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -9,8 +10,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
@@ -90,6 +93,13 @@ public class G2A1VanSeverenJochenApplication implements WebMvcConfigurer {
         registry.addInterceptor(localeChangeInterceptor());
     }
 
+    @ExceptionHandler(GenericException.class)
+    public ModelAndView handleException(Exception ex) {
+        ModelAndView model
+                = new ModelAndView("error/error");
+        model.addObject("errMsg", ex.getMessage());
+        return model;
+    }
 
 
 }

@@ -62,7 +62,10 @@
                     <select class="form-control" id="authors" multiple name="authorNames" required
                             style="height: 15rem;">
                         <option th:each="author : ${globalAuthors}" th:text="${author.name}"
-                                th:value="${author.name}"></option>
+                                th:value="${author.name}"
+                                th:selected="${book.authors != null && book.authors.contains(author)}">
+                        </option>
+
                     </select>
 
 
@@ -96,7 +99,13 @@
                                        th:placeholder="#{addbook.placeholder.plaatsnaam}" type="text">
                             </div>
                         </div>
-                        <div class="mt-2" id="location-list"></div>
+                        <div class="mt-2" id="location-list">
+                            <div th:each="location : ${book.locations}" class="location-display">
+                                <span th:text="${location.plaatscode1} + '-' + ${location.plaatscode2} + ', ' + ${location.plaatsnaam}"></span>
+                                <button class="btn btn-sm btn-danger ml-2" type="button" th:text="#{remove.btn.text}">Default message if key not found.</button>
+                            </div>
+                        </div>
+
                     </div>
                     <p class="error" id="plaatscode-error"></p>
                     <p class="error" id="plaatsnaam-error"></p>
@@ -112,10 +121,14 @@
                 <div style="display: flex; justify-content: space-between;">
                     <div>
                         <a class="btn btn-danger mb-2" href="/" th:text="#{addbook.button.cancel}"></a>
-                        <button class="btn btn-primary mb-2" th:text="#{addbook.button.add_book}"
-                                type="submit"></button>
+                        <button class="btn btn-primary mb-2" th:text="#{${isNew ? 'addbook.button.add_book' : 'addbook.button.update_book'}}" type="submit"></button>
+
+
                     </div>
                 </div>
+
+                <input th:name="isNew" th:value="${isNew}" type="hidden">
+
 
             </form>
         </div>
@@ -124,6 +137,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 <script th:inline="javascript">
 
     // Add location to the list

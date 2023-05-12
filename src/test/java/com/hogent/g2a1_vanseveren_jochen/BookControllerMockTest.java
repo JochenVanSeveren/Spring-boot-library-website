@@ -18,11 +18,10 @@ import repository.LocationRepository;
 import repository.UserRepository;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.times;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -64,11 +63,12 @@ public class BookControllerMockTest {
         expectedBook.setAuthors(Set.of(expectedAuthor));
         expectedBook.setLocations(Set.of(new Location(50, 100, "LOC", expectedBook)));
         Mockito.when(mockBookRepository.findByIsbn("978-0-9936428-4-5"))
-                .then(invocation -> invocation.getMock().toString().contains("-> at ") ? expectedBook : null);
+                .then(invocation -> invocation.getMock().toString().contains("-> at ")
+                        ? Optional.of(expectedBook)
+                        : Optional.empty());
         Mockito.when(mockAuthorRepository.findByName("Author")).thenReturn(expectedAuthor);
         Mockito.when(mockLocationRepository.findAll()).thenReturn(new HashSet<>());
 //        Mockito.when(mockUserRepository.findByUsername("user")).thenReturn(new User("admin", false, "adminUser", "123456789", null));
-
 
         // Define authorNames and locationData
         String[] authorNames = new String[]{"Author"};
@@ -78,7 +78,8 @@ public class BookControllerMockTest {
         mockMvc.perform(post("/addBook")
                         .flashAttr("book", expectedBook)
                         .param("authorNames", authorNames)
-                        .param("locationData", locationData))
+                        .param("locationData", locationData)
+                        .param("isNew", String.valueOf(true)))
                 .andExpect(status().isFound())
                 .andDo(mvcResult -> {
                     if (mvcResult.getResolvedException() != null) {
@@ -100,7 +101,7 @@ public class BookControllerMockTest {
         book.setIsbn("978-0-9936428-4-5");
         user.getFavoriteBooks().add(book);
         Mockito.when(mockUserRepository.findByUsername("adminUser")).thenReturn(user);
-        Mockito.when(mockBookRepository.findByIsbn("978-0-9936428-4-5")).thenReturn(book);
+        Mockito.when(mockBookRepository.findByIsbn("978-0-9936428-4-5")).thenReturn(Optional.of(book));
 
         // Act & Assert
         mockMvc.perform(post("/toggleFavorite")
@@ -121,7 +122,6 @@ public class BookControllerMockTest {
                             });
                 });
     }
-
 
 
 }
