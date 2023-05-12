@@ -114,11 +114,11 @@ public class InitDataConfig implements CommandLineRunner {
         Book book19 = new Book("War and Peace", Set.of(author16), " 978-1-400-07998-8", 37.99, 4, Set.of(location31, location32, location33));
         Book book20 = new Book("Les Miserables", Set.of(author17), "978-0-451-41943-9", 20.99, 5, Set.of(location34));
 
-        User user1 = new User("admin", false, "adminUser", "123456789", null);
-        User user2 = new User("user", false, "user", "123456789", null);
-        User user3 = new User("user1", false, "Jochen", "123456789", null);
-        User user4 = new User("user2", false, "user2", "123456789", null);
-        User user5 = new User("user3", false, "user3", "123456789", null);
+        User user1 = new User("admin", 5, "adminUser", "123456789", null);
+        User user2 = new User("user", 6, "user", "123456789", null);
+        User user3 = new User("user1", 7, "Jochen", "123456789", null);
+        User user4 = new User("user2", 8, "user2", "123456789", null);
+        User user5 = new User("user3", 9, "user3", "123456789", null);
 
         bookRepository.saveAll(Arrays.asList(book1, book2, book3, book4, book5, book6, book7, book8, book9, book10, book11, book12, book13, book14, book15, book16, book18, book19, book20));
         locationRepository.saveAll(Arrays.asList(location1, location2, location3, location4, location5, location6, location7, location8, location9));
@@ -178,6 +178,42 @@ public class InitDataConfig implements CommandLineRunner {
         location32.setBook(book19);
         location33.setBook(book19);
         location34.setBook(book20);
+
+        try {
+            user1.addFavoriteBook(book1);
+            user1.addFavoriteBook(book2);
+            user1.addFavoriteBook(book3);
+            user1.addFavoriteBook(book4);
+
+            user2.addFavoriteBook(book5);
+            user2.addFavoriteBook(book6);
+            user2.addFavoriteBook(book7);
+            user2.addFavoriteBook(book8);
+            user2.addFavoriteBook(book9);
+
+            user3.addFavoriteBook(book1);
+            user3.addFavoriteBook(book3);
+            user3.addFavoriteBook(book10);
+            user3.addFavoriteBook(book11);
+
+            user4.addFavoriteBook(book2);
+            user4.addFavoriteBook(book1);
+            user4.addFavoriteBook(book12);
+
+            user5.addFavoriteBook(book2);
+            user5.addFavoriteBook(book3);
+            user5.addFavoriteBook(book4);
+            user5.addFavoriteBook(book5);
+
+            user1.addFavoriteBook(book19);
+            user2.addFavoriteBook(book19);
+            user3.addFavoriteBook(book19);
+            user4.addFavoriteBook(book19);
+            user5.addFavoriteBook(book19);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
 
 
 

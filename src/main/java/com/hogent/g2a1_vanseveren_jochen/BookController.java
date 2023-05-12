@@ -45,21 +45,26 @@ public class BookController {
 
     @GetMapping("/")
     public String showBookCatalog(Model model) {
-//        model.addAttribute("books", bookRepository.findAll());
         Set<Book> books = bookRepository.findAll();
-        model.addAttribute("books", books);
-//        TODO: replace the following line with the code to get the currently logged in user.
-        model.addAttribute("user", new User("admin", false, "adminUser", "123456789", null));
+        User user = userRepository.findByUsername("adminUser");
 
+        model.addAttribute("books", books);
+        model.addAttribute("title", "bookcatalog.title");
+        model.addAttribute("isPopularBookCatalog", false);
+//        TODO: replace the following line with the code to get the currently logged in user.
+        model.addAttribute("user", user);
         return "index";
     }
 
     @GetMapping("/mostPopularBooks")
     public String showMostPopularBooks(Model model) {
         Set<Book> books = bookRepository.findMostPopularBooks();
+        User user = userRepository.findByUsername("adminUser");
         model.addAttribute("books", books);
+        model.addAttribute("title", "mostpopular.title");
+        model.addAttribute("isPopularBookCatalog", true);
 //        TODO: replace the following line with the code to get the currently logged in user.
-        model.addAttribute("user", new User("admin", false, "adminUser", "123456789", null));
+        model.addAttribute("user", user);
 
         return "index";
     }
@@ -67,10 +72,11 @@ public class BookController {
     @GetMapping("/bookDetails/{isbn}")
     public String showBookDetails(@PathVariable("isbn") String isbn, Model model) {
         Book book = bookRepository.findByIsbn(isbn);
+        User user = userRepository.findByUsername("adminUser");
+        model.addAttribute("isFavorite", user.getFavoriteBooks().contains(book));
         model.addAttribute("book", book);
 //        TODO: replace the following line with the code to get the currently logged in user.
-        model.addAttribute("user", new User("admin", false, "adminUser", "123456789", null));
-
+        model.addAttribute("user", user);
         return "bookDetails";
     }
 

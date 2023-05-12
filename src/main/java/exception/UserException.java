@@ -3,10 +3,8 @@ package exception;
 import lombok.Getter;
 import lombok.Setter;
 
+public class UserException extends Exception {
 
-public class GenericException extends RuntimeException {
-
-    private static final long serialVersionUID = 1L;
     @Getter
     @Setter
     private String errCode;
@@ -15,8 +13,8 @@ public class GenericException extends RuntimeException {
     private String errMsg;
 
 
-    public GenericException(String error, String s) {
+    public UserException(String s) {
         this.errCode = "400";
-        this.errMsg = error + s;
+        this.errMsg = s;
     }
 }

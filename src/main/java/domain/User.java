@@ -1,5 +1,6 @@
 package domain;
 
+import exception.UserException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -26,7 +27,8 @@ public class User implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
     private String role;
-    private boolean isFavoriteLimitReached;
+
+    private int favoriteLimit = 0;
 
     @NotBlank(message = "Username is required")
     @Column(unique = true)
@@ -48,16 +50,30 @@ public class User implements Serializable {
     )
     private Set<Book> favoriteBooks = new HashSet<>();
 
-//    public User(String role, boolean b) {
-//        this.role = role;
-//        isFavoriteLimitReached = b;
-//    }
-
-    public User(String role, boolean isFavoriteLimitReached, String username, String password, Set<Book> favoriteBooks) {
+    public User(String role, int favoriteLimit, String username, String password, Set<Book> favoriteBooks) {
         this.role = role;
-        this.isFavoriteLimitReached = isFavoriteLimitReached;
+        this.favoriteLimit = favoriteLimit;
         this.username = username;
         this.password = password;
         this.favoriteBooks = favoriteBooks;
     }
+
+    public void addFavoriteBook(Book book) throws UserException {
+        if (this.favoriteBooks == null)
+            this.favoriteBooks = new HashSet<>();
+        if(this.favoriteBooks.size() >= this.favoriteLimit)
+            throw new UserException("The user has reached the limit of favorite books");
+        book.setStars(book.getStars() + 1);
+        this.favoriteBooks.add(book);
+    }
+
+    public void removeFavoriteBook(Book book) throws UserException {
+        if (this.favoriteBooks == null)
+            this.favoriteBooks = new HashSet<>();
+        if(!this.favoriteBooks.contains(book))
+            throw new UserException("The user does not have this book in favorites");
+        book.setStars(book.getStars() - 1);
+        this.favoriteBooks.remove(book);
+    }
+
 }

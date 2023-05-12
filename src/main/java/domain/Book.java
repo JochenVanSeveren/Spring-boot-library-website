@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.Formula;
 import org.hibernate.validator.constraints.Range;
 import validation.ISBN;
 
@@ -43,6 +44,7 @@ public class Book implements Serializable {
     @Range(min = 1, max = 100, message = "{book.price.range}")
     private double price;
 
+    @Formula("(SELECT COUNT(*) FROM user_favorite_books WHERE user_favorite_books.book_id = id)")
     private int stars;
 
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)

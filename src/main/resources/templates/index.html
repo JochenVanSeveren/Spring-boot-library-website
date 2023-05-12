@@ -18,8 +18,8 @@
 <body>
 <div class="container">
     <div class="banner">
-        <h1 th:text="#{bookcatalog.title}">Book Catalog</h1></div>
-
+        <h1 th:text="#{${title}}">Book Catalog</h1>
+    </div>
     <div class="card">
         <div class="card-body">
 
@@ -71,8 +71,12 @@
                 </tr>
                 </tbody>
             </table>
-            <a class="btn btn-primary" href="/mostPopularBooks" th:text="#{bookcatalog.button.mostpopular}">Most Popular
-                Books</a>
+
+            <a class="btn btn-primary" th:if="${isPopularBookCatalog}" href="/" th:text="#{book.back_to_catalog}">Back
+                to Catalog</a>
+            <a class="btn btn-primary" th:unless="${isPopularBookCatalog}" href="/mostPopularBooks"
+               th:text="#{bookcatalog.button.mostpopular}">Most Popular Books</a>
+
             <a class="btn btn-success" href="/addBook" th:if="${user.role == 'admin'}"
                th:text="#{bookcatalog.button.addbook}">Add Book</a></div>
 

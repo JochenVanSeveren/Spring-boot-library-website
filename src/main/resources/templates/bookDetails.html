@@ -48,14 +48,17 @@
                             <span class="ml-3" th:text="${location.plaatscode2}"></span>
                         </li>
                     </ul>
-                    <div th:if="${!user.isFavoriteLimitReached}">
-                        <form method="post" th:action="@{/toggleFavorite}">
-                            <input th:name="bookIsbn" th:value="${book.isbn}" type="hidden">
-                            <!--                            <button type="submit" class="btn btn-primary" th:if="${!isFavorite}" th:text="#{book.add_to_favorites}"></button>-->
-                            <!--                            <button type="submit" class="btn btn-danger" th:if="${isFavorite}" th:text="#{book.remove_from_favorites}"></button>-->
 
-                        </form>
-                    </div>
+                    <form method="post" th:action="@{/toggleFavorite}">
+                        <input th:name="bookIsbn" th:value="${book.isbn}" type="hidden">
+                        <button type="submit" class="btn btn-primary"
+                                th:if="${!isFavorite && user.getFavoriteBooks().size() < user.getFavoriteLimit()}"
+                                th:text="#{book.add_to_favorites}"></button>
+                        <button type="submit" class="btn btn-danger" th:if="${isFavorite}"
+                                th:text="#{book.remove_from_favorites}"></button>
+
+                    </form>
+
                     <a class="btn btn-primary mt-3" style="position: absolute; bottom: 10px;" th:href="@{/}"
                        th:text="#{book.back_to_catalog}"></a>
                 </div>
