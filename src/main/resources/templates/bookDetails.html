@@ -57,7 +57,7 @@
                         <a class="btn btn-primary mt-3" style="" th:href="@{/}"
                            th:text="#{book.back_to_catalog}"></a>
                         <input th:name="bookIsbn" th:value="${book.isbn}" type="hidden">
-                        <button type="submit" class="btn btn-primary mt-3"
+                        <button type="submit" class="btn btn-success mt-3"
                                 th:if="${!isFavorite && !userFavoriteLimiteReached}"
                                 th:text="#{book.add_to_favorites}"></button>
                         <button type="submit" class="btn btn-danger mt-3" th:if="${isFavorite}"

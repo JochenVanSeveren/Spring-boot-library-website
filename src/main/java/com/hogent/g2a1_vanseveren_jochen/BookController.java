@@ -199,6 +199,20 @@ public class BookController {
         return authors;
     }
 
+    @PostMapping("/toggleFavorite")
+    public String toggleFavorite(@RequestParam("bookIsbn") String isbn, Model model) {
+//        TODO: replace with current user
+        User user = userRepository.findByUsername("adminUser");
+        Book book = bookRepository.findByIsbn(isbn);
+        if (user.getFavoriteBooks().contains(book)) {
+            user.getFavoriteBooks().remove(book);
+        } else {
+            user.getFavoriteBooks().add(book);
+        }
+        userRepository.save(user);
+        return "redirect:/bookDetails/" + isbn;
+    }
+
     @ExceptionHandler(GenericException.class)
     public ModelAndView handleCustomException(GenericException ex) {
         ModelAndView model
