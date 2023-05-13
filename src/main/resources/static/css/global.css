@@ -83,3 +83,36 @@ a:hover {
     top: 2rem !important;
     right: 0.5rem !important;
 }
+
+.notification {
+    visibility: hidden;
+    min-width: 200px;
+    background-color: blue;
+    color: #fff;
+    text-align: center;
+    border-radius: 2px;
+    padding: 16px;
+    position: fixed;
+    z-index: 1;
+    top: 2rem !important;
+    left: 0.5rem !important;
+    font-size: 17px;
+    transition: visibility 0.5s, opacity 0.5s linear;
+    opacity: 0;
+}
+
+.notification.show {
+    visibility: visible;
+    animation: fadein 0.5s, fadeout 0.5s 2.5s;
+    opacity: 1;
+}
+
+@keyframes fadein {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+@keyframes fadeout {
+    from {opacity: 1;}
+    to {opacity: 0;}
+}

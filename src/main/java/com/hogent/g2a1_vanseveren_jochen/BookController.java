@@ -5,31 +5,36 @@ import domain.Book;
 import domain.Location;
 import domain.User;
 import exception.GenericException;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.support.RequestContextUtils;
 import repository.AuthorRepository;
 import repository.BookRepository;
 import repository.LocationRepository;
 import repository.UserRepository;
 
 import java.security.Principal;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 
 @Controller
 @Slf4j
 @ComponentScan({"com.hogent.g2a1_vanseveren_jochen", "service", "domain", "exception", "repository", "config", "validation"})
 public class BookController {
+
+
+    @Autowired
+    private MessageSource messageSource;
 
 
     @Autowired
@@ -248,20 +253,27 @@ public class BookController {
     }
 
     @PostMapping("/toggleFavorite")
-    public String toggleFavorite(@RequestParam("bookIsbn") String isbn, Principal principal) {
+    public String toggleFavorite(@RequestParam("bookIsbn") String isbn, Principal principal, RedirectAttributes redirectAttributes, HttpServletRequest request) {
         User user = userRepository.findByUsername(principal.getName());
         Optional<Book> book = bookRepository.findByIsbn(isbn);
         if (book.isEmpty()) {
             throw new GenericException("Book not found: ", isbn);
         }
+        Locale locale = RequestContextUtils.getLocale(request);
+        String message;
         if (user.getFavoriteBooks().contains(book.get())) {
             user.getFavoriteBooks().remove(book.get());
+            message = messageSource.getMessage("book.removed", new Object[] {book.get().getTitle()}, locale);
         } else {
             user.getFavoriteBooks().add(book.get());
+            message = messageSource.getMessage("book.added", new Object[] {book.get().getTitle()}, locale);
         }
         userRepository.save(user);
-        return "redirect:/bookDetails/" + isbn;
+        redirectAttributes.addFlashAttribute("message", message);
+        return "redirect:/books";
     }
+
+
 
     @ExceptionHandler(GenericException.class)
     public ModelAndView handleCustomException(GenericException ex) {
