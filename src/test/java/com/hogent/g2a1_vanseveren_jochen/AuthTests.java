@@ -43,10 +43,10 @@ class AuthTests {
                 .andExpect(view().name("books"));
     }
 
-    @WithMockUser(username = "admin", roles = {"ADMIN", "NOT_USER_NOT_ADMIN"})
+    @WithMockUser(username = "user", roles = {"USER"})
     @Test
     public void testNoAccess() throws Exception {
-        mockMvc.perform(get("/books"))
+        mockMvc.perform(get("/addBook/new"))
                 .andExpect(status().isForbidden());
     }
 

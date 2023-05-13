@@ -23,14 +23,6 @@ public class SecurityConfig {
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         auth.jdbcAuthentication().dataSource(dataSource).passwordEncoder(new BCryptPasswordEncoder());
     }
-//    @Autowired
-//    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-//
-//        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-//        auth.inMemoryAuthentication()
-//                .withUser("user").password(encoder.encode("user")).roles("USER").and()
-//                .withUser("admin").password(encoder.encode("admin")).roles("USER", "ADMIN");
-//    }
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -43,6 +35,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/**").permitAll()
                                 .requestMatchers("/bookDetails/**").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/addBook/**").hasAnyRole("ADMIN")
+                                .requestMatchers("/toggleFavorite/**").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/*")
                                 .access(new WebExpressionAuthorizationManager("hasAnyRole('ROLE_USER', 'ROLE_ADMIN')")))
                 .formLogin(form ->
@@ -53,5 +46,6 @@ public class SecurityConfig {
 
         return http.build();
     }
+
 
 }

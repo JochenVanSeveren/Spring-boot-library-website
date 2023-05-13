@@ -115,11 +115,11 @@ public class InitDataConfig implements CommandLineRunner {
         Book book19 = new Book("War and Peace", Set.of(author16), " 978-1-400-07998-8", 37.99, 4, Set.of(location31, location32, location33));
         Book book20 = new Book("Les Miserables", Set.of(author17), "978-0-451-41943-9", 20.99, 5, Set.of(location34));
 
-        User user1 = new User("ADMIN", 5, "admin", passwordEncoder.encode( "admin"), null);
-        User user2 = new User("USER", 6, "user", passwordEncoder.encode( "user"), null);
-        User adminJochen = new User("ADMIN", 7, "jochen", passwordEncoder.encode( "admin"), null);
-        User user4 = new User("USER", 8, "user2", passwordEncoder.encode( "user"), null);
-        User user5 = new User("USER", 9, "user3", passwordEncoder.encode( "user"), null);
+        User user1 = new User( 5, "admin", passwordEncoder.encode( "admin"), null);
+        User user2 = new User( 6, "user", passwordEncoder.encode( "user"), null);
+        User adminJochen = new User( 7, "jochen", passwordEncoder.encode( "admin"), null);
+        User user4 = new User( 8, "user2", passwordEncoder.encode( "user"), null);
+        User user5 = new User( 9, "user3", passwordEncoder.encode( "user"), null);
 
         bookRepository.saveAll(Arrays.asList(book1, book2, book3, book4, book5, book6, book7, book8, book9, book10, book11, book12, book13, book14, book15, book16, book18, book19, book20));
         locationRepository.saveAll(Arrays.asList(location1, location2, location3, location4, location5, location6, location7, location8, location9));
@@ -237,8 +237,13 @@ public class InitDataConfig implements CommandLineRunner {
         userAuthority4.setUsername(user5.getUsername());
         userAuthority4.setAuthority("ROLE_USER");
 
+        Authority userAuthority5 = new Authority();
+        userAuthority5.setUsername(adminJochen.getUsername());
+        userAuthority5.setAuthority("ROLE_USER");
+
         user1.getAuths().add(adminAuthority);
         adminJochen.getAuths().add(adminAuthority2);
+        adminJochen.getAuths().add(userAuthority5);
         user2.getAuths().add(userAuthority);
         user4.getAuths().add(userAuthority3);
         user5.getAuths().add(userAuthority4);

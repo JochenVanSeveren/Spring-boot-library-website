@@ -26,8 +26,8 @@
     <div class="account card">
         <div class="card-body">
             <div class="account-details">
-                <p th:text="${user.role}" class="role-text"></p>
-                <p th:text="${user.username}" class="username-text"></p>
+                <p th:text="${isAdmin ? 'ADMIN' : 'USER'}" class="role-text"></p>
+                <p th:text="${username}" class="username-text"></p>
             </div>
             <form th:action="@{/logout}" method="post">
                 <button type="submit" class="btn btn-danger logout">Logout</button>
@@ -87,7 +87,7 @@
                     <td>
                         <a class="btn btn-info" th:href="@{'/bookDetails/' + ${book.isbn}}"
                            th:text="#{bookcatalog.table.viewdetails}">View Details</a>
-                        <a class="btn btn-success" th:if="${user.role == 'ADMIN'}"
+                        <a class="btn btn-success" th:if="${isAdmin}"
                            th:href="@{'/addBook/' + ${book.isbn}}"><i class='far fa-edit'></i></a>
 
                     </td>
@@ -101,7 +101,7 @@
             <a class="btn btn-primary" th:unless="${isPopularBookCatalog}" href="/mostPopularBooks"
                th:text="#{bookcatalog.button.mostpopular}">Most Popular Books</a>
 
-            <a class="btn btn-success" href="/addBook/new" th:if="${user.role == 'ADMIN'}"
+            <a class="btn btn-success" href="/addBook/new" th:if="${isAdmin}"
                th:text="#{bookcatalog.button.addbook}">Add Book</a></div>
 
     </div>
@@ -113,17 +113,16 @@
 <script th:inline="javascript">
     /*<![CDATA[*/
     var message = /*[[${message}]]*/ null;
-    if(message) {
+    if (message) {
         var notification = document.getElementById('notification');
         notification.innerText = message;
         notification.classList.add('show');
-        setTimeout(function(){
+        setTimeout(function () {
             notification.classList.remove('show');
         }, 3000); // Hide after 3 seconds
     }
     /*]]>*/
 </script>
-
 
 
 <script>

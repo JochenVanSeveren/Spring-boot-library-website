@@ -11,6 +11,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -51,47 +55,67 @@ public class BookController {
     public UserRepository userRepository;
 
     @GetMapping("/books")
-    public String showBookCatalog(Model model, Principal principal) {
+    public String showBookCatalog(Model model, Authentication authentication)
+    {
         Set<Book> books = bookRepository.findAll();
-        User user = userRepository.findByUsername(principal.getName());
-
         model.addAttribute("books", books);
         model.addAttribute("title", "bookcatalog.title");
         model.addAttribute("isPopularBookCatalog", false);
-        model.addAttribute("user", user);
+
+        List<String> listRoles = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority).toList();
+
+        Boolean isAdmin = listRoles.contains("ROLE_ADMIN");
+
+        model.addAttribute("username", authentication.getName());
+        model.addAttribute("userListRoles", listRoles);
+        model.addAttribute("isAdmin", isAdmin);
         return "books";
     }
 
     @GetMapping("/mostPopularBooks")
-    public String showMostPopularBooks(Model model, Principal principal) {
+    public String showMostPopularBooks(Model model, Authentication authentication) {
         Set<Book> books = bookRepository.findMostPopularBooks();
-        User user = userRepository.findByUsername(principal.getName());
         model.addAttribute("books", books);
         model.addAttribute("title", "mostpopular.title");
         model.addAttribute("isPopularBookCatalog", true);
-        model.addAttribute("user", user);
+
+        List<String> listRoles = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority).toList();
+
+        Boolean isAdmin = listRoles.contains("ROLE_ADMIN");
+
+        model.addAttribute("username", authentication.getName());
+        model.addAttribute("userListRoles", listRoles);
+        model.addAttribute("isAdmin", isAdmin);
 
         return "books";
     }
 
     @GetMapping("/bookDetails/{isbn}")
-    public String showBookDetails(@PathVariable("isbn") String isbn, Model model, Principal principal) {
+    public String showBookDetails(@PathVariable("isbn") String isbn, Model model, Authentication authentication) {
         Optional<Book> book = bookRepository.findByIsbn(isbn);
         if (book.isEmpty()) {
             throw new GenericException("Book not found: ", isbn);
         }
-        User user = userRepository.findByUsername(principal.getName());
+        User user = userRepository.findByUsername(authentication.getName());
         model.addAttribute("isFavorite", user.getFavoriteBooks().contains(book.get()));
         model.addAttribute("userFavoriteLimiteReached", user.getFavoriteBooks().size() >= user.getFavoriteLimit());
         model.addAttribute("book", book.get());
-        model.addAttribute("user", user);
+        List<String> listRoles = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority).toList();
+
+        Boolean isAdmin = listRoles.contains("ROLE_ADMIN");
+
+        model.addAttribute("username", authentication.getName());
+        model.addAttribute("userListRoles", listRoles);
+        model.addAttribute("isAdmin", isAdmin);
         return "bookDetails";
     }
 
     @GetMapping("/addBook/{isbn}")
-    public String showAddBook(@PathVariable String isbn, Model model, Principal principal) {
+    public String showAddBook(@PathVariable String isbn, Model model, Authentication authentication) {
         Optional<Book> book;
-        User user = userRepository.findByUsername(principal.getName());
         if (isbn.equals("new")) {
             model.addAttribute("isNew", true);
             book = Optional.of(new Book());
@@ -107,7 +131,14 @@ public class BookController {
 
         model.addAttribute("book", book.get());
         model.addAttribute("globalAuthors", globalAuthors);
-        model.addAttribute("user", user);
+        List<String> listRoles = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority).toList();
+
+        Boolean isAdmin = listRoles.contains("ROLE_ADMIN");
+
+        model.addAttribute("username", authentication.getName());
+        model.addAttribute("userListRoles", listRoles);
+        model.addAttribute("isAdmin", isAdmin);
 
         return "bookForm";
     }
@@ -253,8 +284,8 @@ public class BookController {
     }
 
     @PostMapping("/toggleFavorite")
-    public String toggleFavorite(@RequestParam("bookIsbn") String isbn, Principal principal, RedirectAttributes redirectAttributes, HttpServletRequest request) {
-        User user = userRepository.findByUsername(principal.getName());
+    public String toggleFavorite(@RequestParam("bookIsbn") String isbn, Authentication authentication, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+        User user = userRepository.findByUsername(authentication.getName());
 
         Optional<Book> book = bookRepository.findByIsbn(isbn);
         if (book.isEmpty()) {
@@ -264,16 +295,15 @@ public class BookController {
         String message;
         if (user.getFavoriteBooks().contains(book.get())) {
             user.getFavoriteBooks().remove(book.get());
-            message = messageSource.getMessage("book.removed", new Object[] {book.get().getTitle()}, locale);
+            message = messageSource.getMessage("book.removed", new Object[]{book.get().getTitle()}, locale);
         } else {
             user.getFavoriteBooks().add(book.get());
-            message = messageSource.getMessage("book.added", new Object[] {book.get().getTitle()}, locale);
+            message = messageSource.getMessage("book.added", new Object[]{book.get().getTitle()}, locale);
         }
         userRepository.save(user);
         redirectAttributes.addFlashAttribute("message", message);
         return "redirect:/books";
     }
-
 
 
     @ExceptionHandler(GenericException.class)

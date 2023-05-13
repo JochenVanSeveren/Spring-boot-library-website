@@ -17,10 +17,10 @@ import java.util.Set;
 
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
 @EqualsAndHashCode(of = {"username"})
-@ToString(of = {"username", "role"})
+@ToString(of = {"username"})
 public class User implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
@@ -28,7 +28,6 @@ public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String role;
 
     private int favoriteLimit = 0;
 
@@ -60,8 +59,7 @@ public class User implements Serializable {
     @JsonManagedReference
     private Set<Book> favoriteBooks = new HashSet<>();
 
-    public User(String role, int favoriteLimit, String username, String password, Set<Book> favoriteBooks) {
-        this.role = role;
+    public User(int favoriteLimit, String username, String password, Set<Book> favoriteBooks) {
         this.favoriteLimit = favoriteLimit;
         this.username = username;
         this.password = password;
