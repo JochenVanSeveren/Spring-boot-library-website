@@ -255,6 +255,7 @@ public class BookController {
     @PostMapping("/toggleFavorite")
     public String toggleFavorite(@RequestParam("bookIsbn") String isbn, Principal principal, RedirectAttributes redirectAttributes, HttpServletRequest request) {
         User user = userRepository.findByUsername(principal.getName());
+
         Optional<Book> book = bookRepository.findByIsbn(isbn);
         if (book.isEmpty()) {
             throw new GenericException("Book not found: ", isbn);

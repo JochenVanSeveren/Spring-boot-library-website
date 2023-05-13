@@ -1,9 +1,8 @@
 package com.hogent.g2a1_vanseveren_jochen;
 
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestBuilders.formLogin;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.model;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.view;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import config.SecurityConfig;
 import org.junit.jupiter.api.Test;
@@ -40,10 +39,8 @@ class AuthTests {
     @Test
     public void testAccessWithUserRole() throws Exception {
         mockMvc.perform(get("/books"))
-                .andExpect(status().isOk());
-//                .andExpect(view().name("hello"))
-//                .andExpect(model().attributeExists("username"))
-//                .andExpect(model().attribute("username", "user"));
+                .andExpect(status().isOk())
+                .andExpect(view().name("books"));
     }
 
     @WithMockUser(username = "admin", roles = {"ADMIN", "NOT_USER_NOT_ADMIN"})
@@ -52,5 +49,25 @@ class AuthTests {
         mockMvc.perform(get("/books"))
                 .andExpect(status().isForbidden());
     }
+
+
+    @Test
+    void testWrongPassword() throws Exception {
+        mockMvc.perform(formLogin("/login")
+                        .user("username", "user")
+                        .password("password", "wrongPassword"))
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/login?error"));
+    }
+
+    @Test
+    void testCorrectPassword() throws Exception {
+        mockMvc.perform(formLogin("/login")
+                        .user("username", "user")
+                        .password("password", "user"))
+                .andExpect(status().isFound())
+                .andExpect(redirectedUrl("/books"));
+    }
+
 
 }

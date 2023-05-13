@@ -80,6 +80,7 @@
                         <a class="btn btn-success mt-3" th:if="${user.role == 'ADMIN'}"
                            th:href="@{'/addBook/' + ${book.isbn}}"><i
                                 class='far fa-edit'></i></a>
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
 
                     </form>
                 </div>

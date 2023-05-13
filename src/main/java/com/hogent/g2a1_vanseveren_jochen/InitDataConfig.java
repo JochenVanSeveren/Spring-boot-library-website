@@ -1,9 +1,6 @@
 package com.hogent.g2a1_vanseveren_jochen;
 
-import domain.Author;
-import domain.Book;
-import domain.Location;
-import domain.User;
+import domain.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -120,9 +117,9 @@ public class InitDataConfig implements CommandLineRunner {
 
         User user1 = new User("ADMIN", 5, "admin", passwordEncoder.encode( "admin"), null);
         User user2 = new User("USER", 6, "user", passwordEncoder.encode( "user"), null);
-        User user3 = new User("USER", 7, "Jochen", passwordEncoder.encode( "123456789"), null);
-        User user4 = new User("USER", 8, "user2", passwordEncoder.encode( "123456789"), null);
-        User user5 = new User("USER", 9, "user3", passwordEncoder.encode( "123456789"), null);
+        User adminJochen = new User("ADMIN", 7, "jochen", passwordEncoder.encode( "admin"), null);
+        User user4 = new User("USER", 8, "user2", passwordEncoder.encode( "user"), null);
+        User user5 = new User("USER", 9, "user3", passwordEncoder.encode( "user"), null);
 
         bookRepository.saveAll(Arrays.asList(book1, book2, book3, book4, book5, book6, book7, book8, book9, book10, book11, book12, book13, book14, book15, book16, book18, book19, book20));
         locationRepository.saveAll(Arrays.asList(location1, location2, location3, location4, location5, location6, location7, location8, location9));
@@ -195,10 +192,10 @@ public class InitDataConfig implements CommandLineRunner {
             user2.addFavoriteBook(book8);
             user2.addFavoriteBook(book9);
 
-            user3.addFavoriteBook(book1);
-            user3.addFavoriteBook(book3);
-            user3.addFavoriteBook(book10);
-            user3.addFavoriteBook(book11);
+            adminJochen.addFavoriteBook(book1);
+            adminJochen.addFavoriteBook(book3);
+            adminJochen.addFavoriteBook(book10);
+            adminJochen.addFavoriteBook(book11);
 
             user4.addFavoriteBook(book2);
             user4.addFavoriteBook(book1);
@@ -211,7 +208,7 @@ public class InitDataConfig implements CommandLineRunner {
 
             user1.addFavoriteBook(book19);
             user2.addFavoriteBook(book19);
-            user3.addFavoriteBook(book19);
+            adminJochen.addFavoriteBook(book19);
             user4.addFavoriteBook(book19);
             user5.addFavoriteBook(book19);
         }
@@ -219,10 +216,35 @@ public class InitDataConfig implements CommandLineRunner {
             e.printStackTrace();
         }
 
+        Authority adminAuthority = new Authority();
+        adminAuthority.setUsername(user1.getUsername());
+        adminAuthority.setAuthority("ROLE_ADMIN");
+
+        Authority adminAuthority2 = new Authority();
+        adminAuthority2.setUsername(adminJochen.getUsername());
+        adminAuthority2.setAuthority("ROLE_ADMIN");
+
+        Authority userAuthority = new Authority();
+        userAuthority.setUsername(user2.getUsername());
+        userAuthority.setAuthority("ROLE_USER");
 
 
+        Authority userAuthority3 = new Authority();
+        userAuthority3.setUsername(user4.getUsername());
+        userAuthority3.setAuthority("ROLE_USER");
 
-        userRepository.saveAll(Arrays.asList(user1, user2, user3, user4, user5));
+        Authority userAuthority4 = new Authority();
+        userAuthority4.setUsername(user5.getUsername());
+        userAuthority4.setAuthority("ROLE_USER");
+
+        user1.getAuths().add(adminAuthority);
+        adminJochen.getAuths().add(adminAuthority2);
+        user2.getAuths().add(userAuthority);
+        user4.getAuths().add(userAuthority3);
+        user5.getAuths().add(userAuthority4);
+
+
+        userRepository.saveAll(Arrays.asList(user1, user2, adminJochen, user4, user5));
 
         bookRepository.saveAll(Arrays.asList(book1, book2, book3, book4, book5, book6, book7, book8, book9, book10, book11, book12, book13, book14, book15, book16, book18, book19, book20));
         locationRepository.saveAll(Arrays.asList(location1, location2, location3, location4, location5, location6, location7, location8, location9, location10, location11, location12, location13, location14, location15, location16, location17, location18, location19, location20, location21, location22, location23, location24, location25, location26, location27, location28, location29, location30, location31, location32, location33, location34));

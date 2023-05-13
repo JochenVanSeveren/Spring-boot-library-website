@@ -19,6 +19,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
+import perform.PerformRestExample;
 import rest.BookWebClient;
 
 import java.util.Locale;
@@ -41,15 +42,13 @@ public class G2A1VanSeverenJochenApplication implements WebMvcConfigurer {
     public static void main(String[] args) {
         SpringApplication.run(G2A1VanSeverenJochenApplication.class, args);
 
-        BookWebClient client = new BookWebClient();
 
-        // Get books by an author
-        client.getBooksByAuthor("Test Author")
-                .subscribe(book -> System.out.println("Book title: " + book.getTitle()));
+        try {
+            new PerformRestExample();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        // Get a book by ISBN
-        client.getBookByIsbn("1234567890123")
-                .subscribe(book -> System.out.println("Book title: " + book.getTitle()));
     }
 
 

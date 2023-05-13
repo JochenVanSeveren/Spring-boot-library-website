@@ -13,10 +13,11 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
-@Entity
+@Entity(name = "users")
+
 @Getter
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @EqualsAndHashCode(of = {"username"})
 @ToString(of = {"username", "role"})
@@ -39,9 +40,16 @@ public class User implements Serializable {
     @Size(min = 8, message = "Password must be at least 8 characters long")
     private String password;
 
+    private boolean enabled;
+
+
 //    @NotBlank(message = "Email is required")
 //    @Email(message = "Invalid email address")
 //    private String email;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Authority> auths = new HashSet<>();
+
 
     @ManyToMany
     @JoinTable(
@@ -58,6 +66,7 @@ public class User implements Serializable {
         this.username = username;
         this.password = password;
         this.favoriteBooks = favoriteBooks;
+        this.enabled = true;
     }
 
     public void addFavoriteBook(Book book) throws UserException {
