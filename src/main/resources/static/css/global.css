@@ -77,3 +77,9 @@ a:hover {
     background-color: #5a6268;
     border-color: #545b62;
 }
+
+.account {
+    position: fixed !important;
+    top: 2rem !important;
+    right: 0.5rem !important;
+}

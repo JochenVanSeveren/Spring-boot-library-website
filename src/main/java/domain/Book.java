@@ -1,5 +1,7 @@
 package domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -31,6 +33,7 @@ public class Book implements Serializable {
     @NotBlank(message = "{book.title.notBlank}")
     private String title;
 
+    @JsonBackReference
     @ManyToMany(mappedBy = "books", fetch = FetchType.EAGER)
     private Set<Author> authors;
 
@@ -48,12 +51,15 @@ public class Book implements Serializable {
     private int stars;
 
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JsonManagedReference
     private Set<Location> locations = new HashSet<>();
+//
+//    @ManyToMany(mappedBy = "favoriteBooks")
+//    @JsonManagedReference
+//    private Set<User> favoritedByUsers = new HashSet<>();
 
     @ManyToMany(mappedBy = "favoriteBooks")
-    private Set<User> favoritedByUsers = new HashSet<>();
-
-    @ManyToMany(mappedBy = "favoriteBooks")
+    @JsonBackReference
     private Set<User> users = new HashSet<>();
 
 

@@ -1,5 +1,6 @@
 package domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import exception.UserException;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
@@ -48,6 +49,7 @@ public class User implements Serializable {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "book_id")
     )
+    @JsonManagedReference
     private Set<Book> favoriteBooks = new HashSet<>();
 
     public User(String role, int favoriteLimit, String username, String password, Set<Book> favoriteBooks) {

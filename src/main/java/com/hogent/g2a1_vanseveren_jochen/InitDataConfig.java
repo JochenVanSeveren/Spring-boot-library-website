@@ -6,6 +6,7 @@ import domain.Location;
 import domain.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Component;
 import repository.AuthorRepository;
 import repository.BookRepository;
@@ -17,6 +18,9 @@ import java.util.Set;
 
 @Component
 public class InitDataConfig implements CommandLineRunner {
+
+    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
 
     @Autowired
     private BookRepository bookRepository;
@@ -114,11 +118,11 @@ public class InitDataConfig implements CommandLineRunner {
         Book book19 = new Book("War and Peace", Set.of(author16), " 978-1-400-07998-8", 37.99, 4, Set.of(location31, location32, location33));
         Book book20 = new Book("Les Miserables", Set.of(author17), "978-0-451-41943-9", 20.99, 5, Set.of(location34));
 
-        User user1 = new User("admin", 5, "adminUser", "123456789", null);
-        User user2 = new User("user", 6, "user", "123456789", null);
-        User user3 = new User("user1", 7, "Jochen", "123456789", null);
-        User user4 = new User("user2", 8, "user2", "123456789", null);
-        User user5 = new User("user3", 9, "user3", "123456789", null);
+        User user1 = new User("ADMIN", 5, "admin", passwordEncoder.encode( "admin"), null);
+        User user2 = new User("USER", 6, "user", passwordEncoder.encode( "user"), null);
+        User user3 = new User("USER", 7, "Jochen", passwordEncoder.encode( "123456789"), null);
+        User user4 = new User("USER", 8, "user2", passwordEncoder.encode( "123456789"), null);
+        User user5 = new User("USER", 9, "user3", passwordEncoder.encode( "123456789"), null);
 
         bookRepository.saveAll(Arrays.asList(book1, book2, book3, book4, book5, book6, book7, book8, book9, book10, book11, book12, book13, book14, book15, book16, book18, book19, book20));
         locationRepository.saveAll(Arrays.asList(location1, location2, location3, location4, location5, location6, location7, location8, location9));

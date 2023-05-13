@@ -11,10 +11,10 @@ import org.springframework.context.annotation.ComponentScans;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
@@ -27,12 +27,13 @@ import java.util.Properties;
 @EnableJpaRepositories(basePackages = {"repository"})
 @EntityScan(basePackages = {"domain"})
 @ComponentScans({
-        @ComponentScan("service"),
+//        @ComponentScan("service"),
         @ComponentScan("domain"),
         @ComponentScan("repository"),
         @ComponentScan("exception"),
         @ComponentScan("config"),
-        @ComponentScan("validation")
+        @ComponentScan("validation"),
+        @ComponentScan("rest")
 })
 public class G2A1VanSeverenJochenApplication implements WebMvcConfigurer {
 
@@ -40,17 +41,12 @@ public class G2A1VanSeverenJochenApplication implements WebMvcConfigurer {
         SpringApplication.run(G2A1VanSeverenJochenApplication.class, args);
     }
 
-//        @Bean
-//        public LocaleResolver localeResolver() {
-//            SessionLocaleResolver slr = new SessionLocaleResolver();
-//            slr.setDefaultLocale(new Locale("nl", "BE"));
-//            return slr;
-//        }
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addRedirectViewController("/", "/books");
+    	    registry.addViewController("/403").setViewName("auth/403");
 
-//    @Override
-//    public void addViewControllers(ViewControllerRegistry registry) {
-//        registry.addRedirectViewController("/", "/boeken");
-//    }
+    }
 
     @Bean
     SimpleMappingExceptionResolver simpleMappingExceptionResolver() {
@@ -100,6 +96,7 @@ public class G2A1VanSeverenJochenApplication implements WebMvcConfigurer {
         model.addObject("errMsg", ex.getMessage());
         return model;
     }
+
 
 
 }

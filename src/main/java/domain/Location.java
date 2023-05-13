@@ -1,5 +1,7 @@
 package domain;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import lombok.EqualsAndHashCode;
@@ -38,6 +40,7 @@ public class Location implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "book_id")
+    @JsonBackReference
     private Book book;
 
 

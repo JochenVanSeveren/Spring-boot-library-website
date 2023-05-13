@@ -1,5 +1,6 @@
 package com.hogent.g2a1_vanseveren_jochen;
 
+import config.SecurityConfig;
 import domain.Author;
 import domain.Book;
 import domain.Location;
@@ -10,6 +11,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
+import org.springframework.context.annotation.Import;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.test.web.servlet.MockMvc;
 import repository.AuthorRepository;
@@ -27,6 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
+@Import(SecurityConfig.class)
 @Slf4j
 public class BookControllerMockTest {
 
@@ -55,6 +59,7 @@ public class BookControllerMockTest {
 //        ReflectionTestUtils.setField(bookControllerUnderTest, "globalAuthors", new HashSet<>());
     }
 
+    @WithMockUser(username = "user", roles = {"ADMIN"})
     @Test
     void submitAddBook() throws Exception {
         // Arrange
@@ -92,15 +97,18 @@ public class BookControllerMockTest {
 
     }
 
+    @WithMockUser(username = "user", roles = {"USER"})
     @Test
     void toggleFavorite() throws Exception {
         // Arrange
         User user = new User();
-        user.setUsername("adminUser");
+        user.setUsername("user");
+        user.setRole("USER");
+        user.setFavoriteBooks(new HashSet<>());
         Book book = new Book();
         book.setIsbn("978-0-9936428-4-5");
         user.getFavoriteBooks().add(book);
-        Mockito.when(mockUserRepository.findByUsername("adminUser")).thenReturn(user);
+        Mockito.when(mockUserRepository.findByUsername("user")).thenReturn(user);
         Mockito.when(mockBookRepository.findByIsbn("978-0-9936428-4-5")).thenReturn(Optional.of(book));
 
         // Act & Assert

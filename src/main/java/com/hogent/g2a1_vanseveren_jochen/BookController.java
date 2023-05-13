@@ -19,6 +19,7 @@ import repository.BookRepository;
 import repository.LocationRepository;
 import repository.UserRepository;
 
+import java.security.Principal;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -45,49 +46,47 @@ public class BookController {
     public UserRepository userRepository;
 
     @GetMapping("/books")
-    public String showBookCatalog(Model model) {
+    public String showBookCatalog(Model model, Principal principal) {
         Set<Book> books = bookRepository.findAll();
-        User user = userRepository.findByUsername("adminUser");
+        User user = userRepository.findByUsername(principal.getName());
 
         model.addAttribute("books", books);
         model.addAttribute("title", "bookcatalog.title");
         model.addAttribute("isPopularBookCatalog", false);
-//        TODO: replace the following line with the code to get the currently logged in user.
         model.addAttribute("user", user);
         return "books";
     }
 
     @GetMapping("/mostPopularBooks")
-    public String showMostPopularBooks(Model model) {
+    public String showMostPopularBooks(Model model, Principal principal) {
         Set<Book> books = bookRepository.findMostPopularBooks();
-        User user = userRepository.findByUsername("adminUser");
+        User user = userRepository.findByUsername(principal.getName());
         model.addAttribute("books", books);
         model.addAttribute("title", "mostpopular.title");
         model.addAttribute("isPopularBookCatalog", true);
-//        TODO: replace the following line with the code to get the currently logged in user.
         model.addAttribute("user", user);
 
         return "books";
     }
 
     @GetMapping("/bookDetails/{isbn}")
-    public String showBookDetails(@PathVariable("isbn") String isbn, Model model) {
+    public String showBookDetails(@PathVariable("isbn") String isbn, Model model, Principal principal) {
         Optional<Book> book = bookRepository.findByIsbn(isbn);
         if (book.isEmpty()) {
             throw new GenericException("Book not found: ", isbn);
         }
-        User user = userRepository.findByUsername("adminUser");
+        User user = userRepository.findByUsername(principal.getName());
         model.addAttribute("isFavorite", user.getFavoriteBooks().contains(book.get()));
         model.addAttribute("userFavoriteLimiteReached", user.getFavoriteBooks().size() >= user.getFavoriteLimit());
         model.addAttribute("book", book.get());
-//        TODO: replace the following line with the code to get the currently logged in user.
         model.addAttribute("user", user);
         return "bookDetails";
     }
 
     @GetMapping("/addBook/{isbn}")
-    public String showAddBook(@PathVariable String isbn, Model model) {
+    public String showAddBook(@PathVariable String isbn, Model model, Principal principal) {
         Optional<Book> book;
+        User user = userRepository.findByUsername(principal.getName());
         if (isbn.equals("new")) {
             model.addAttribute("isNew", true);
             book = Optional.of(new Book());
@@ -103,6 +102,7 @@ public class BookController {
 
         model.addAttribute("book", book.get());
         model.addAttribute("globalAuthors", globalAuthors);
+        model.addAttribute("user", user);
 
         return "bookForm";
     }
@@ -248,9 +248,8 @@ public class BookController {
     }
 
     @PostMapping("/toggleFavorite")
-    public String toggleFavorite(@RequestParam("bookIsbn") String isbn, Model model) {
-//        TODO: replace with current user
-        User user = userRepository.findByUsername("adminUser");
+    public String toggleFavorite(@RequestParam("bookIsbn") String isbn, Principal principal) {
+        User user = userRepository.findByUsername(principal.getName());
         Optional<Book> book = bookRepository.findByIsbn(isbn);
         if (book.isEmpty()) {
             throw new GenericException("Book not found: ", isbn);

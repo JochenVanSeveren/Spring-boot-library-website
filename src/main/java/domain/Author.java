@@ -1,5 +1,6 @@
 package domain;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
@@ -28,6 +29,7 @@ public class Author implements Serializable {
     private String name;
 
     @ManyToMany(cascade = CascadeType.PERSIST)
+    @JsonManagedReference
     @JoinTable(
             name = "book_authors",
             joinColumns = @JoinColumn(name = "author_id"),
