@@ -11,10 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -27,7 +26,6 @@ import repository.BookRepository;
 import repository.LocationRepository;
 import repository.UserRepository;
 
-import java.security.Principal;
 import java.util.*;
 
 
@@ -55,32 +53,21 @@ public class BookController {
     public UserRepository userRepository;
 
 
-
     @GetMapping("/books")
-    public String showBookCatalog(Model model, Authentication authentication)
-    {
+    public String showBookCatalog(Model model) {
         Set<Book> books = bookRepository.findAll();
         model.addAttribute("books", books);
         model.addAttribute("title", "bookcatalog.title");
         model.addAttribute("isPopularBookCatalog", false);
-
-        addAttributeListRoles(model, authentication);
-
-        model.addAttribute("username", authentication.getName());
         return "books";
     }
 
     @GetMapping("/mostPopularBooks")
-    public String showMostPopularBooks(Model model, Authentication authentication) {
+    public String showMostPopularBooks(Model model) {
         Set<Book> books = bookRepository.findMostPopularBooks();
         model.addAttribute("books", books);
         model.addAttribute("title", "mostpopular.title");
         model.addAttribute("isPopularBookCatalog", true);
-
-        addAttributeListRoles(model, authentication);
-
-
-        model.addAttribute("username", authentication.getName());
         return "books";
     }
 
@@ -94,16 +81,11 @@ public class BookController {
         model.addAttribute("isFavorite", user.getFavoriteBooks().contains(book.get()));
         model.addAttribute("userFavoriteLimiteReached", user.getFavoriteBooks().size() >= user.getFavoriteLimit());
         model.addAttribute("book", book.get());
-
-        addAttributeListRoles(model, authentication);
-
-
-        model.addAttribute("username", authentication.getName());
         return "bookDetails";
     }
 
     @GetMapping("/addBook/{isbn}")
-    public String showAddBook(@PathVariable String isbn, Model model, Authentication authentication) {
+    public String showAddBook(@PathVariable String isbn, Model model) {
         Optional<Book> book;
         if (isbn.equals("new")) {
             model.addAttribute("isNew", true);
@@ -120,10 +102,6 @@ public class BookController {
 
         model.addAttribute("book", book.get());
         model.addAttribute("globalAuthors", globalAuthors);
-        addAttributeListRoles(model, authentication);
-
-
-        model.addAttribute("username", authentication.getName());
         return "bookForm";
     }
 
@@ -252,11 +230,7 @@ public class BookController {
             throw new GenericException("Error in form", e.getMessage());
         }
     }
-    private void addAttributeListRoles(Model model, Authentication authentication) {
-        List<String> listRoles = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority).toList();
-        model.addAttribute("userListRoles", listRoles);
-    }
+
 
     private Set<Author> getAuthorsOrSaveNewAuthors(Book book, String[] authorNames) {
         Set<Author> authors = new HashSet<>();
@@ -273,8 +247,8 @@ public class BookController {
     }
 
     @PostMapping("/toggleFavorite")
-    public String toggleFavorite(@RequestParam("bookIsbn") String isbn, Authentication authentication, RedirectAttributes redirectAttributes, HttpServletRequest request) {
-        User user = userRepository.findByUsername(authentication.getName());
+    public String toggleFavorite(@RequestParam("bookIsbn") String isbn, RedirectAttributes redirectAttributes, HttpServletRequest request) {
+        User user = userRepository.findByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
 
         Optional<Book> book = bookRepository.findByIsbn(isbn);
         if (book.isEmpty()) {
@@ -304,5 +278,14 @@ public class BookController {
         return model;
     }
 
+    @ModelAttribute("userListRoles")
+    public List<String> getUserListRoles() {
+        return SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority).toList();
+    }
 
+    @ModelAttribute("username")
+    public String getUsername() {
+        return SecurityContextHolder.getContext().getAuthentication().getName();
+    }
 }

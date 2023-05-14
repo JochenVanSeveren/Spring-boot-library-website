@@ -5,6 +5,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+
 public class BookWebClient {
 
     private final WebClient client = WebClient.create("http://localhost:8080/api/books");

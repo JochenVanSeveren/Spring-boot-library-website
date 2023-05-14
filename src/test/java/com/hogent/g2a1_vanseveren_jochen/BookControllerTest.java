@@ -21,8 +21,6 @@ class BookControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-
-
     @WithMockUser(username = "user", roles = {"USER"})
     @Test
     void showBookCatalog() throws Exception {
