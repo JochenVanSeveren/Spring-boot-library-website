@@ -32,8 +32,7 @@ class BookControllerTest {
                 .andExpect(model().attributeExists("title"))
                 .andExpect(model().attributeExists("books"))
                 .andExpect(model().attributeExists("isPopularBookCatalog"))
-                .andExpect(model().attributeExists("userListRoles"))
-                .andExpect(model().attributeExists("isAdmin"));
+                .andExpect(model().attributeExists("userListRoles"));
     }
 
     @WithMockUser(username = "user", roles = {"USER"})
@@ -45,8 +44,7 @@ class BookControllerTest {
                 .andExpect(model().attributeExists("title"))
                 .andExpect(model().attributeExists("books"))
                 .andExpect(model().attributeExists("isPopularBookCatalog"))
-                .andExpect(model().attributeExists("userListRoles"))
-                .andExpect(model().attributeExists("isAdmin"));
+                .andExpect(model().attributeExists("userListRoles"));
     }
 
     @WithMockUser(username = "user", roles = {"USER"})
@@ -58,8 +56,7 @@ class BookControllerTest {
                 .andExpect(model().attributeExists("isFavorite"))
                 .andExpect(model().attributeExists("userFavoriteLimiteReached"))
                 .andExpect(model().attributeExists("book"))
-                .andExpect(model().attributeExists("userListRoles"))
-                .andExpect(model().attributeExists("isAdmin"));
+                .andExpect(model().attributeExists("userListRoles"));
     }
 
     @WithMockUser(username = "admin", roles = {"ADMIN"})

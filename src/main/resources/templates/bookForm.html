@@ -29,7 +29,8 @@
     <div class="account card">
         <div class="card-body">
             <div class="account-details">
-                <p th:text="${isAdmin ? 'ADMIN' : 'USER'}" class="role-text"></p>
+                <p th:text="${#authorization.expression('hasRole(''ADMIN'')') ? 'ADMIN' : 'USER'}"
+                   class="role-text"></p>
                 <p th:text="${username}" class="username-text"></p>
             </div>
             <form th:action="@{/logout}" method="post">
@@ -146,7 +147,7 @@
 
                 <input th:name="isNew" th:value="${isNew}" type="hidden">
 
-                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
 
             </form>
         </div>

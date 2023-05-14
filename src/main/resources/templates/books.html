@@ -26,7 +26,7 @@
     <div class="account card">
         <div class="card-body">
             <div class="account-details">
-                <p th:text="${isAdmin ? 'ADMIN' : 'USER'}" class="role-text"></p>
+                <p th:text="${#authorization.expression('hasRole(''ADMIN'')') ? 'ADMIN' : 'USER'}" class="role-text"></p>
                 <p th:text="${username}" class="username-text"></p>
             </div>
             <form th:action="@{/logout}" method="post">
@@ -87,7 +87,7 @@
                     <td>
                         <a class="btn btn-info" th:href="@{'/bookDetails/' + ${book.isbn}}"
                            th:text="#{bookcatalog.table.viewdetails}">View Details</a>
-                        <a class="btn btn-success" th:if="${isAdmin}"
+                        <a class="btn btn-success" th:if="${#authorization.expression('hasRole(''ADMIN'')')}"
                            th:href="@{'/addBook/' + ${book.isbn}}"><i class='far fa-edit'></i></a>
 
                     </td>
@@ -101,7 +101,7 @@
             <a class="btn btn-primary" th:unless="${isPopularBookCatalog}" href="/mostPopularBooks"
                th:text="#{bookcatalog.button.mostpopular}">Most Popular Books</a>
 
-            <a class="btn btn-success" href="/addBook/new" th:if="${isAdmin}"
+            <a class="btn btn-success" href="/addBook/new" th:if="${#authorization.expression('hasRole(''ADMIN'')')}"
                th:text="#{bookcatalog.button.addbook}">Add Book</a></div>
 
     </div>

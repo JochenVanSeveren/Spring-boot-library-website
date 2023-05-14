@@ -27,7 +27,8 @@
     <div class="account card">
         <div class="card-body">
             <div class="account-details">
-                <p th:text="${isAdmin ? 'ADMIN' : 'USER'}" class="role-text"></p>
+                <p th:text="${#authorization.expression('hasRole(''ADMIN'')') ? 'ADMIN' : 'USER'}"
+                   class="role-text"></p>
                 <p th:text="${username}" class="username-text"></p>
             </div>
             <form th:action="@{/logout}" method="post">
@@ -36,7 +37,6 @@
             </form>
         </div>
     </div>
-
 
 
     <div class="card">
@@ -76,11 +76,11 @@
                                 th:text="#{book.add_to_favorites}"></button>
                         <button type="submit" class="btn btn-danger mt-3" th:if="${isFavorite}"
                                 th:text="#{book.remove_from_favorites}"></button>
-                        <a class="btn btn-success mt-3" th:if="${isAdmin}"
+                        <a class="btn btn-success mt-3" th:if="${#authorization.expression('hasRole(''ADMIN'')')}"
                            th:href="@{'/addBook/' + ${book.isbn}}"><i
                                 class='far fa-edit'></i></a>
-                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
-
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+                        <!-- TODO: remove button-->
                     </form>
                 </div>
             </div>

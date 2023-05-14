@@ -1,4 +1,4 @@
-package com.hogent.g2a1_vanseveren_jochen;
+package config;
 
 import domain.*;
 import org.springframework.beans.factory.annotation.Autowired;

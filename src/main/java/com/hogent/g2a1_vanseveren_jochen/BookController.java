@@ -54,6 +54,8 @@ public class BookController {
     @Autowired
     public UserRepository userRepository;
 
+
+
     @GetMapping("/books")
     public String showBookCatalog(Model model, Authentication authentication)
     {
@@ -62,14 +64,9 @@ public class BookController {
         model.addAttribute("title", "bookcatalog.title");
         model.addAttribute("isPopularBookCatalog", false);
 
-        List<String> listRoles = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority).toList();
-
-        Boolean isAdmin = listRoles.contains("ROLE_ADMIN");
+        addAttributeListRoles(model, authentication);
 
         model.addAttribute("username", authentication.getName());
-        model.addAttribute("userListRoles", listRoles);
-        model.addAttribute("isAdmin", isAdmin);
         return "books";
     }
 
@@ -80,15 +77,10 @@ public class BookController {
         model.addAttribute("title", "mostpopular.title");
         model.addAttribute("isPopularBookCatalog", true);
 
-        List<String> listRoles = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority).toList();
+        addAttributeListRoles(model, authentication);
 
-        Boolean isAdmin = listRoles.contains("ROLE_ADMIN");
 
         model.addAttribute("username", authentication.getName());
-        model.addAttribute("userListRoles", listRoles);
-        model.addAttribute("isAdmin", isAdmin);
-
         return "books";
     }
 
@@ -102,14 +94,11 @@ public class BookController {
         model.addAttribute("isFavorite", user.getFavoriteBooks().contains(book.get()));
         model.addAttribute("userFavoriteLimiteReached", user.getFavoriteBooks().size() >= user.getFavoriteLimit());
         model.addAttribute("book", book.get());
-        List<String> listRoles = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority).toList();
 
-        Boolean isAdmin = listRoles.contains("ROLE_ADMIN");
+        addAttributeListRoles(model, authentication);
+
 
         model.addAttribute("username", authentication.getName());
-        model.addAttribute("userListRoles", listRoles);
-        model.addAttribute("isAdmin", isAdmin);
         return "bookDetails";
     }
 
@@ -131,15 +120,10 @@ public class BookController {
 
         model.addAttribute("book", book.get());
         model.addAttribute("globalAuthors", globalAuthors);
-        List<String> listRoles = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority).toList();
+        addAttributeListRoles(model, authentication);
 
-        Boolean isAdmin = listRoles.contains("ROLE_ADMIN");
 
         model.addAttribute("username", authentication.getName());
-        model.addAttribute("userListRoles", listRoles);
-        model.addAttribute("isAdmin", isAdmin);
-
         return "bookForm";
     }
 
@@ -267,6 +251,11 @@ public class BookController {
             e.printStackTrace();
             throw new GenericException("Error in form", e.getMessage());
         }
+    }
+    private void addAttributeListRoles(Model model, Authentication authentication) {
+        List<String> listRoles = authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority).toList();
+        model.addAttribute("userListRoles", listRoles);
     }
 
     private Set<Author> getAuthorsOrSaveNewAuthors(Book book, String[] authorNames) {
