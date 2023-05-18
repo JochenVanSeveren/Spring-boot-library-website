@@ -9,7 +9,6 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
@@ -67,5 +66,23 @@ public class BookRestControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.title").value("Test Book 1"));
+    }
+
+    @Test
+    public void getBookByIsbnNotFoundTest() throws Exception {
+        Mockito.when(bookRepository.findByIsbn(Mockito.anyString())).thenReturn(Optional.empty());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/books/byIsbn/1234567890123")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
+    }
+
+    @Test
+    public void getBooksByAuthorNotFoundTest() throws Exception {
+        Mockito.when(authorRepository.findByName(Mockito.anyString())).thenReturn(null);
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/books/byAuthor/Test Author")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNotFound());
     }
 }
