@@ -20,7 +20,6 @@ import org.springframework.web.servlet.handler.SimpleMappingExceptionResolver;
 import org.springframework.web.servlet.i18n.LocaleChangeInterceptor;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import perform.PerformRestExample;
-import rest.BookWebClient;
 
 import java.util.Locale;
 import java.util.Properties;
@@ -52,11 +51,10 @@ public class G2A1VanSeverenJochenApplication implements WebMvcConfigurer {
     }
 
 
-
     @Override
     public void addViewControllers(ViewControllerRegistry registry) {
         registry.addRedirectViewController("/", "/books");
-    	    registry.addViewController("/403").setViewName("auth/403");
+        registry.addViewController("/403").setViewName("auth/403");
 
     }
 
@@ -108,7 +106,6 @@ public class G2A1VanSeverenJochenApplication implements WebMvcConfigurer {
         model.addObject("errMsg", ex.getMessage());
         return model;
     }
-
 
 
 }

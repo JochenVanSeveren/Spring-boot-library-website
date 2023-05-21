@@ -70,7 +70,7 @@ public class User implements Serializable {
     public void addFavoriteBook(Book book) throws UserException {
         if (this.favoriteBooks == null)
             this.favoriteBooks = new HashSet<>();
-        if(this.favoriteBooks.size() >= this.favoriteLimit)
+        if (this.favoriteBooks.size() >= this.favoriteLimit)
             throw new UserException("The user has reached the limit of favorite books");
         book.setStars(book.getStars() + 1);
         this.favoriteBooks.add(book);
@@ -79,7 +79,7 @@ public class User implements Serializable {
     public void removeFavoriteBook(Book book) throws UserException {
         if (this.favoriteBooks == null)
             this.favoriteBooks = new HashSet<>();
-        if(!this.favoriteBooks.contains(book))
+        if (!this.favoriteBooks.contains(book))
             throw new UserException("The user does not have this book in favorites");
         book.setStars(book.getStars() - 1);
         this.favoriteBooks.remove(book);

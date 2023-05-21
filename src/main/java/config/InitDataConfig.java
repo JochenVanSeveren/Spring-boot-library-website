@@ -92,7 +92,6 @@ public class InitDataConfig implements CommandLineRunner {
         Location location34 = new Location(250, 300, "AH", null);
 
 
-
         authorRepository.saveAll(Arrays.asList(author1, author2, author3, author4, author5, author6, author7, author8, author9, author10, author11, author12, author13, author15, author16, author17, author18, author19, author20, author21));
 
         Book book1 = new Book("1984", Set.of(author1), "978-0-452-28423-4", 19.99, 4, Set.of(location1, location2));
@@ -111,15 +110,15 @@ public class InitDataConfig implements CommandLineRunner {
         Book book14 = new Book("The Handmaid's Tale", Set.of(author11), "978-0-385-49081-8", 28.99, 5, Set.of(location25, location26));
         Book book15 = new Book("The Old Man and the Sea", Set.of(author12), "978-0-684-80122-3", 14.99, 4, Set.of(location27));
         Book book16 = new Book("Adventures of Huckleberry Finn", Set.of(author13), "978-1-953-64980-5", 15.99, 5, Set.of(location28));
-        Book book18 = new Book("A Tale of Two Cities", Set.of(author15), "978-0-451-53057-8", 12.99, 5, Set.of(location29,location30));
+        Book book18 = new Book("A Tale of Two Cities", Set.of(author15), "978-0-451-53057-8", 12.99, 5, Set.of(location29, location30));
         Book book19 = new Book("War and Peace", Set.of(author16), " 978-1-400-07998-8", 37.99, 4, Set.of(location31, location32, location33));
         Book book20 = new Book("Les Miserables", Set.of(author17), "978-0-451-41943-9", 20.99, 5, Set.of(location34));
 
-        User user1 = new User( 5, "admin", passwordEncoder.encode( "admin"), null);
-        User user2 = new User( 6, "user", passwordEncoder.encode( "user"), null);
-        User adminJochen = new User( 7, "jochen", passwordEncoder.encode( "admin"), null);
-        User user4 = new User( 8, "user2", passwordEncoder.encode( "user"), null);
-        User user5 = new User( 9, "user3", passwordEncoder.encode( "user"), null);
+        User user1 = new User(5, "admin", passwordEncoder.encode("admin"), null);
+        User user2 = new User(6, "user", passwordEncoder.encode("user"), null);
+        User adminJochen = new User(7, "jochen", passwordEncoder.encode("admin"), null);
+        User user4 = new User(8, "user2", passwordEncoder.encode("user"), null);
+        User user5 = new User(9, "user3", passwordEncoder.encode("user"), null);
 
         bookRepository.saveAll(Arrays.asList(book1, book2, book3, book4, book5, book6, book7, book8, book9, book10, book11, book12, book13, book14, book15, book16, book18, book19, book20));
         locationRepository.saveAll(Arrays.asList(location1, location2, location3, location4, location5, location6, location7, location8, location9));
@@ -211,8 +210,7 @@ public class InitDataConfig implements CommandLineRunner {
             adminJochen.addFavoriteBook(book19);
             user4.addFavoriteBook(book19);
             user5.addFavoriteBook(book19);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

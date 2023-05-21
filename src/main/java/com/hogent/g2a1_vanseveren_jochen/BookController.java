@@ -36,22 +36,15 @@ public class BookController {
 
 
     @Autowired
-    private MessageSource messageSource;
-
-
-    @Autowired
     public BookRepository bookRepository;
-
     @Autowired
     public AuthorRepository authorRepository;
-
-
     @Autowired
     public LocationRepository locationRepository;
-
     @Autowired
     public UserRepository userRepository;
-
+    @Autowired
+    private MessageSource messageSource;
 
     @GetMapping("/books")
     public String showBookCatalog(Model model) {
