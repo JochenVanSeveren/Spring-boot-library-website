@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import org.hibernate.annotations.Formula;
 import org.hibernate.validator.constraints.Range;
@@ -24,7 +23,10 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 @EqualsAndHashCode(of = {"isbn"})
 public class Book implements Serializable {
+
     public static final int MAX_AUTHORS = 3;
+    public static final int MAX_LOCATIONS = 3;
+
     @Serial
     private static final long serialVersionUID = 1L;
     @Id
@@ -43,7 +45,6 @@ public class Book implements Serializable {
     @Column(unique = true)
     private String isbn;
 
-    @NotNull
     @Range(min = 1, max = 100, message = "{book.price.range}")
     private double price;
 

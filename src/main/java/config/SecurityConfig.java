@@ -32,6 +32,7 @@ public class SecurityConfig {
                                 .requestMatchers("/login**").permitAll()
                                 .requestMatchers("/css/**").permitAll()
                                 .requestMatchers("/403**").permitAll()
+                                .requestMatchers("/error/**").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/api/**").permitAll()
                                 .requestMatchers("/bookDetails/**").hasAnyRole("USER", "ADMIN")
                                 .requestMatchers("/addBook/**").hasAnyRole("ADMIN")

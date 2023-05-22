@@ -125,6 +125,7 @@ public class BookController {
                 log.error(result.toString());
                 Set<Author> globalAuthors = authorRepository.findAll();
                 model.addAttribute("globalAuthors", globalAuthors);
+                model.addAttribute("isNew", isNew);
                 return "bookForm";
             }
 
@@ -151,17 +152,31 @@ public class BookController {
 
                 Location location = new Location(x, y, name, null);
                 if (isNew) {
-                    boolean existsAlready = locationRepository.findAll().contains(location);
+                    boolean existsAlready = (locationRepository.findAll().contains(location));
                     if (existsAlready) {
                         result.rejectValue("locations", "Locations", "Location already exists");
                         log.error("Errors in form, location already exists");
                         log.error(result.toString());
                         Set<Author> globalAuthors = authorRepository.findAll();
                         model.addAttribute("globalAuthors", globalAuthors);
+                        model.addAttribute("isNew", true);
                         return "bookForm";
                     }
                 }
                 locations.add(location);
+            }
+
+            if (locations.size() > Book.MAX_LOCATIONS) {
+                result.rejectValue("locations", "Size.book.locations", "There must be at most 3 locations");
+            }
+
+            if (result.hasErrors()) {
+                log.error("Errors in form");
+                log.error(result.toString());
+                Set<Author> globalAuthors = authorRepository.findAll();
+                model.addAttribute("globalAuthors", globalAuthors);
+                model.addAttribute("isNew", isNew);
+                return "bookForm";
             }
 
             book.setLocations(locations);
@@ -191,7 +206,7 @@ public class BookController {
                 }
 
                 bookToUpdate.setTitle(book.getTitle());
-
+                bookToUpdate.setPrice(book.getPrice());
                 // Set new sets of locations and authors
                 bookToUpdate.setAuthors(new HashSet<>(authors));
                 bookToUpdate.setLocations(new HashSet<>(locations));
