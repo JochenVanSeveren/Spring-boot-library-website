@@ -120,117 +120,27 @@ public class BookController {
             if (locationData == null) {
                 result.rejectValue("locations", "Size.book.locations", "There must be at least 1 location");
             }
-            if (result.hasErrors()) {
-                log.error("Errors in form");
-                log.error(result.toString());
-                Set<Author> globalAuthors = authorRepository.findAll();
-                model.addAttribute("globalAuthors", globalAuthors);
-                model.addAttribute("isNew", isNew);
-                return "bookForm";
-            }
+            if (errorRedirect(result, model, isNew)) return "bookForm";
 
 
-            Set<Author> authors = getAuthorsOrSaveNewAuthors(book, authorNames);
+            Set<Author> authors = getAuthorsOrSaveNewAuthors(authorNames);
             book.setAuthors(authors);
 
             Set<Location> locations = new HashSet<>();
-
-            log.debug("locationData" + locationData);
-
             assert locationData != null;
-            String[] items = locationData.split(";");
-            for (String item : items) {
-                String[] parts = item.split(",");
-                String value1 = parts[0].trim();
-                String value2 = parts[1].trim();
-                int index = value1.indexOf("-");
-                int x = Integer.parseInt(value1.substring(0, index));
-                int y = Integer.parseInt(value1.substring(index + 1));
-                String name = value2.trim();
-
-                log.debug(item, x, y, name);
-
-                Location location = new Location(x, y, name, null);
-                if (isNew) {
-                    boolean existsAlready = (locationRepository.findAll().contains(location));
-                    if (existsAlready) {
-                        result.rejectValue("locations", "Locations", "Location already exists");
-                        log.error("Errors in form, location already exists");
-                        log.error(result.toString());
-                        Set<Author> globalAuthors = authorRepository.findAll();
-                        model.addAttribute("globalAuthors", globalAuthors);
-                        model.addAttribute("isNew", true);
-                        return "bookForm";
-                    }
-                }
-                locations.add(location);
-            }
+            formatLocations(result, model, locationData, isNew, locations);
 
             if (locations.size() > Book.MAX_LOCATIONS) {
                 result.rejectValue("locations", "Size.book.locations", "There must be at most 3 locations");
             }
 
-            if (result.hasErrors()) {
-                log.error("Errors in form");
-                log.error(result.toString());
-                Set<Author> globalAuthors = authorRepository.findAll();
-                model.addAttribute("globalAuthors", globalAuthors);
-                model.addAttribute("isNew", isNew);
-                return "bookForm";
-            }
+            if (errorRedirect(result, model, isNew)) return "bookForm";
 
             book.setLocations(locations);
 
-            if (existingBook.isPresent()) {
-                Book bookToUpdate = existingBook.get();
+            book = saveBook(book, isNew, existingBook, authors, locations);
 
-                if (!isNew) {
-                    log.debug("Removing locations and authors that are no longer used");
-
-                    Set<Location> oldLocations = new HashSet<>(bookToUpdate.getLocations());
-                    oldLocations.removeAll(locations);
-                    for (Location location : oldLocations) {
-                        log.debug("Removing location: " + location);
-                        bookToUpdate.removeLocation(location);
-                        locationRepository.delete(location);
-                    }
-
-                    Set<Author> oldAuthors = new HashSet<>(bookToUpdate.getAuthors());
-                    oldAuthors.removeAll(authors);
-                    for (Author author : oldAuthors) {
-                        Set<Book> books = new HashSet<>(author.getBooks());
-                        books.remove(bookToUpdate);
-                        author.setBooks(books);
-                        authorRepository.save(author);
-                    }
-                }
-
-                bookToUpdate.setTitle(book.getTitle());
-                bookToUpdate.setPrice(book.getPrice());
-                // Set new sets of locations and authors
-                bookToUpdate.setAuthors(new HashSet<>(authors));
-                bookToUpdate.setLocations(new HashSet<>(locations));
-
-                book = bookRepository.save(bookToUpdate);
-            } else {
-                book = bookRepository.save(book);
-            }
-
-            @Valid Book finalBook = book;
-            locations.forEach(location -> {
-                location.setBook(finalBook);
-                locationRepository.save(location);
-            });
-
-            @Valid Book finalBook1 = book;
-            authors.forEach(author -> {
-                Set<Book> books = new HashSet<>(author.getBooks());
-                books.add(finalBook1);
-                author.setBooks(books);
-                authorRepository.save(author);
-            });
-
-            log.info("Saved book: " + book);
+            saveAuthorsAndLocations(book, authors, locations);
 
             return "redirect:/bookDetails/" + isbn;
         } catch (Exception e) {
@@ -239,20 +149,113 @@ public class BookController {
         }
     }
 
+    private void formatLocations(BindingResult result, Model model, String locationData, boolean isNew, Set<Location> locations) {
+        String[] items = locationData.split(";");
+        for (String item : items) {
+            String[] parts = item.split(",");
+            String value1 = parts[0].trim();
+            String value2 = parts[1].trim();
+            int index = value1.indexOf("-");
+            int x = Integer.parseInt(value1.substring(0, index));
+            int y = Integer.parseInt(value1.substring(index + 1));
+            String name = value2.trim();
 
-    private Set<Author> getAuthorsOrSaveNewAuthors(Book book, String[] authorNames) {
+            log.debug(item, x, y, name);
+
+            Location location = new Location(x, y, name, null);
+            if (isNew) {
+                boolean existsAlready = (locationRepository.findAll().contains(location));
+                if (existsAlready) {
+                    result.rejectValue("locations", "Locations", "Location already exists");
+                    log.error("Errors in form, location already exists");
+                    log.error(result.toString());
+                    Set<Author> globalAuthors = authorRepository.findAll();
+                    model.addAttribute("globalAuthors", globalAuthors);
+                    model.addAttribute("isNew", true);
+                }
+            }
+            locations.add(location);
+        }
+    }
+
+    private Book saveBook(Book book, boolean isNew, Optional<Book> existingBook, Set<Author> authors, Set<Location> locations) {
+        if (existingBook.isPresent()) {
+            Book bookToUpdate = existingBook.get();
+
+            if (!isNew) {
+                log.debug("Removing locations and authors that are no longer used");
+
+                Set<Location> oldLocations = new HashSet<>(bookToUpdate.getLocations());
+                oldLocations.removeAll(locations);
+                for (Location location : oldLocations) {
+                    log.debug("Removing location: " + location);
+                    bookToUpdate.removeLocation(location);
+                    locationRepository.delete(location);
+                }
+
+                Set<Author> oldAuthors = new HashSet<>(bookToUpdate.getAuthors());
+                oldAuthors.removeAll(authors);
+                for (Author author : oldAuthors) {
+                    Set<Book> books = new HashSet<>(author.getBooks());
+                    books.remove(bookToUpdate);
+                    author.setBooks(books);
+                    authorRepository.save(author);
+                }
+            }
+
+            bookToUpdate.setTitle(book.getTitle());
+            bookToUpdate.setPrice(book.getPrice());
+            // Set new sets of locations and authors
+            bookToUpdate.setAuthors(new HashSet<>(authors));
+            bookToUpdate.setLocations(new HashSet<>(locations));
+
+            book = bookRepository.save(bookToUpdate);
+        } else {
+            book = bookRepository.save(book);
+        }
+        return book;
+    }
+
+    private Set<Author> getAuthorsOrSaveNewAuthors(String[] authorNames) {
         Set<Author> authors = new HashSet<>();
         for (String authorName : authorNames) {
             Author author = authorRepository.findByName(authorName);
             if (author == null) {
                 author = new Author();
                 author.setName(authorName);
-                author.setBooks(new HashSet<>(List.of(book)));
             }
             authors.add(author);
         }
         return authors;
     }
+
+    private void saveAuthorsAndLocations(Book book, Set<Author> authors, Set<Location> locations) {
+        @Valid Book finalBook = book;
+        locations.forEach(location -> {
+            location.setBook(finalBook);
+            locationRepository.save(location);
+        });
+
+        authors.forEach(author -> {
+            Set<Book> books = new HashSet<>(author.getBooks());
+            books.add(finalBook);
+            author.setBooks(books);
+            authorRepository.save(author);
+        });
+    }
+
+    private boolean errorRedirect(BindingResult result, Model model, @RequestParam("isNew") boolean isNew) {
+        if (result.hasErrors()) {
+            log.error("Errors in form");
+            log.error(result.toString());
+            Set<Author> globalAuthors = authorRepository.findAll();
+            model.addAttribute("globalAuthors", globalAuthors);
+            model.addAttribute("isNew", isNew);
+            return true;
+        }
+        return false;
+    }
+
 
     @PostMapping("/toggleFavorite")
     public String toggleFavorite(@RequestParam("bookIsbn") String isbn, RedirectAttributes redirectAttributes, HttpServletRequest request) {

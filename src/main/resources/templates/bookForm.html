@@ -75,7 +75,8 @@
 
                     <select class="form-control" id="authors" multiple name="authorNames" required
                             style="height: 15rem;">
-                        <option th:each="author : ${globalAuthors}" th:selected="${book.authors != null && book.authors.contains(author)}"
+                        <option th:each="author : ${globalAuthors}"
+                                th:selected="${book.authors != null && book.authors.contains(author)}"
                                 th:text="${author.name}"
                                 th:value="${author.name}">
                         </option>
@@ -159,55 +160,60 @@
 
 <script th:inline="javascript">
 
-    // Add location to the list
-    // Add location to the list
+    // Modify your add location function
     $('#add-location-btn').click(function () {
-        var plaatscode1 = parseInt($('#plaatscode1').val());
-        var plaatscode2 = parseInt($('#plaatscode2').val());
-        var plaatsnaam = $('#plaatsnaam').val();
-        var isValid = true;
+        if ($('.location-display').length < 3) {  // Only add if less than 3 locations
+            let plaatscode1 = parseInt($('#plaatscode1').val());
+            let plaatscode2 = parseInt($('#plaatscode2').val());
+            let plaatsnaam = $('#plaatsnaam').val();
+            let isValid = true;
 
-        // Validate plaatscode1 and plaatscode2
-        if (!Number.isInteger(plaatscode1) || plaatscode1 < 50 || plaatscode1 > 300 || !Number.isInteger(plaatscode2) || plaatscode2 < 50 || plaatscode2 > 300 || Math.abs(plaatscode2 - plaatscode1) < 50) {
-            isValid = false;
-            $('#plaatscode-error').text(/*[[#{plaatscode.error}]]*/ 'Default message if key not found.');
+            // Validate plaatscode1 and plaatscode2
+            if (!Number.isInteger(plaatscode1) || plaatscode1 < 50 || plaatscode1 > 300 || !Number.isInteger(plaatscode2) || plaatscode2 < 50 || plaatscode2 > 300 || Math.abs(plaatscode2 - plaatscode1) < 50) {
+                isValid = false;
+                $('#plaatscode-error').text(/*[[#{plaatscode.error}]]*/ 'Plaatscode moet tussen 50 en 300 zijn en het verschil tussen plaatscode1 en plaatscode2 moet minimaal 50 zijn. ');
+            } else {
+                $('#plaatscode-error').text('');
+            }
+
+            // Validate plaatsnaam
+            if (!/^[a-zA-Z]+$/.test(plaatsnaam)) {
+                isValid = false;
+                $('#plaatsnaam-error').text(/*[[#{plaatsnaam.error}]]*/ 'Plaatsnaam mag alleen letters bevatten.');
+            } else {
+                $('#plaatsnaam-error').text('');
+            }
+
+            // If validation passes, add the location
+            if (isValid) {
+                let locationDisplay = $('<div>', {class: 'location-display'}).text(plaatscode1 + '-' + plaatscode2 + ', ' + plaatsnaam);
+                let locationRemoveBtn = $('<button>', {
+                    class: 'btn btn-sm btn-danger ml-2',
+                    type: 'button'
+                }).text(/*[[#{remove.btn.text}]]*/ 'Default message if key not found.');
+                locationDisplay.append(locationRemoveBtn);
+                $('#location-list').append(locationDisplay);
+
+                // Clear input fields
+                $('#plaatscode1').val('');
+                $('#plaatscode2').val('');
+                $('#plaatsnaam').val('');
+
+                locationCount++;  // Increment the count of locations added
+            }
         } else {
-            $('#plaatscode-error').text('');
-        }
-
-        // Validate plaatsnaam
-        if (!/^[a-zA-Z]+$/.test(plaatsnaam)) {
-            isValid = false;
-            $('#plaatsnaam-error').text(/*[[#{plaatsnaam.error}]]*/ 'Default message if key not found.');
-        } else {
-            $('#plaatsnaam-error').text('');
-        }
-
-        // If validation passes, add the location
-        if (isValid) {
-            var locationDisplay = $('<div>', {class: 'location-display'}).text(plaatscode1 + '-' + plaatscode2 + ', ' + plaatsnaam);
-            var locationRemoveBtn = $('<button>', {
-                class: 'btn btn-sm btn-danger ml-2',
-                type: 'button'
-            }).text(/*[[#{remove.btn.text}]]*/ 'Default message if key not found.');
-            locationDisplay.append(locationRemoveBtn);
-            $('#location-list').append(locationDisplay);
-
-            // Clear input fields
-            $('#plaatscode1').val('');
-            $('#plaatscode2').val('');
-            $('#plaatsnaam').val('');
+            alert("Only 3 locations are allowed!");  // Display a message if limit is exceeded
         }
     });
 
-
-    // Remove location from the list
+    // Modify your remove location function
     $(document).on('click', '.location-display button', function () {
         $(this).parent().remove();
+        locationCount--;  // Decrement the count of locations added
     });
 
     $('#add-book-form').on('submit', function (e) {
-        var locationCount = $('.location-display').length;
+        let locationCount = $('.location-display').length;
         if (locationCount < 1) {
             e.preventDefault(); // Prevent form submission
             $('#location-error').text(/*[[#{location.error}]]*/ 'Default message if key not found.'); // Show error message            return;
@@ -216,8 +222,8 @@
         }
 
         // Update the location-data input field
-        var locationData = '';
-        var removeText = /*[[#{remove.text}]]*/ 'Default message if key not found.';
+        let locationData = '';
+        let removeText = /*[[#{remove.text}]]*/ 'Default message if key not found.';
         $('.location-display').each(function () {
             locationData += ($(this).text().replace(removeText, '')).trim() + ';';
         });
@@ -229,7 +235,7 @@
     <!--    authors     -->
     $(document).ready(function () {
         $('#author-search').on('input', function () {
-            var searchValue = $(this).val().toLowerCase();
+            let searchValue = $(this).val().toLowerCase();
             $('#authors option').each(function () {
                 if ($(this).text().toLowerCase().indexOf(searchValue) === -1) {
                     $(this).attr('hidden', 'hidden');
@@ -241,7 +247,7 @@
 
         $('#authors').on('mousedown', function (e) {
             e.preventDefault();
-            var option = e.target;
+            let option = e.target;
             if (option.tagName === 'OPTION') {
                 option.selected = !option.selected;
                 return false;
@@ -253,9 +259,9 @@
 
     $(document).add(function () {
         $('#add-author-btn').click(function () {
-            var newAuthorName = $('#new-author').val();
+            let newAuthorName = $('#new-author').val();
             if (newAuthorName) {
-                var newOption = $('<option>', {
+                let newOption = $('<option>', {
                     value: newAuthorName,
                     text: newAuthorName,
                     selected: true
