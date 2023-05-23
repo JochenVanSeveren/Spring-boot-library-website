@@ -54,10 +54,6 @@ public class Book implements Serializable {
     @OneToMany(mappedBy = "book", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JsonManagedReference
     private Set<Location> locations = new HashSet<>();
-//
-//    @ManyToMany(mappedBy = "favoriteBooks")
-//    @JsonManagedReference
-//    private Set<User> favoritedByUsers = new HashSet<>();
 
     @ManyToMany(mappedBy = "favoriteBooks")
     @JsonBackReference

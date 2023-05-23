@@ -11,5 +11,4 @@ public interface LocationRepository extends CrudRepository<Location, Long> {
 
     Set<Location> findAll();
 
-//    Location findByPlaatscode1Plaatscode2Plaatsnaam(int x, int y, String name);
 }
